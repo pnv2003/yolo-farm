@@ -1,13 +1,16 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import TestApp from './components/TestApp';
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, Text, View, Image } from "react-native";
+import TestApp from "./components/TestApp";
+import HomeScreen from "./components/Home";
+import Navbar from "./components/Navbar";
+import { FontAwesome } from "@expo/vector-icons"; // Import FontAwesome from Expo vector icons
 
 export default function App() {
   return (
     <View style={styles.container}>
-      {/* <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" /> */}
-      <TestApp />
+      <Navbar />
+      {/* Add HomeScreen component */}
+      <HomeScreen />
     </View>
   );
 }
@@ -15,8 +18,8 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    paddingTop: 60,
+    backgroundColor: "#f0f0f0",
+    padding: 20,
   },
 });
