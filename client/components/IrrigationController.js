@@ -14,7 +14,7 @@ const IrrigationController = () => {
     // to be received from server
     const [pumping, setPumping] = useState(false);
     const soilMoisture = 70;
-    const mode = Strings.AUTOMATIC;
+    const mode = Strings.MANUAL;
 
     return (
         <View style={styles.container}>
