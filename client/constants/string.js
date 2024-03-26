@@ -1,0 +1,11 @@
+export const IRRIGATION = 'Tưới tiêu';
+export const WATER_PUMP = 'Máy bơm nước';
+export const ON = 'Đang hoạt động';
+export const OFF = 'Đã tắt';
+export const SOIL_MOISTURE = 'Độ ẩm đất';
+export const MODE = 'Chế độ';
+export const AUTOMATIC = 'Tự động';
+export const MANUAL = 'Thủ công';
+export const DEVICE = 'Thiết bị';
+export const METRIC = 'Thông số';
+export const SETTINGS = 'Cài đặt';
