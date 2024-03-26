@@ -1,10 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-import TestApp from './components/TestApp';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import IrrigationScreen from './screens/IrrigationScreen';
 import * as Strings from './constants/string';
+import * as Headers from './constants/header';
+import PumpModeScreen from './screens/PumpModeScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -13,8 +14,12 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen 
-          name={Strings.IRRIGATION}
+          name={Headers.IRRIGATION}
           component={IrrigationScreen}
+        />
+        <Stack.Screen 
+          name={Headers.PUMP_MODE}
+          component={PumpModeScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>
