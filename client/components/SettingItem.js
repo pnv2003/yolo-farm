@@ -3,9 +3,21 @@ import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { useNavigation } from "@react-navigation/native";
 
-const SettingItem = ({children, icon, title, target, disabled}) => {
+const SettingItem = ({children, icon, title, target, disabled, primColor, bgColor}) => {
 
     const navigation = useNavigation();
+
+    const styles = StyleSheet.create({
+        container: {
+            flex: 1, 
+            // alignItems: 'center',
+            padding: 10,
+            backgroundColor: bgColor,
+            borderStyle: 'solid',
+            // borderWidth: 1,
+            borderRadius: 20,
+        }
+    });
 
     return (
         <TouchableOpacity
@@ -13,23 +25,11 @@ const SettingItem = ({children, icon, title, target, disabled}) => {
             onPress={() => navigation.navigate(target)}
             disabled={disabled}
         >
-            <FontAwesomeIcon icon={icon} color="#0095FF" style={{ alignSelf: 'flex-end' }}/>
-            <Text style={{ fontWeight: 'bold', color: '#0095FF' }}>{title}</Text>
+            <FontAwesomeIcon icon={icon} color={primColor} style={{ alignSelf: 'flex-end' }}/>
+            <Text style={{ fontWeight: 'bold', color: primColor }}>{title}</Text>
             {children}
         </TouchableOpacity>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1, 
-        // alignItems: 'center',
-        padding: 10,
-        backgroundColor: '#C3E6FF',
-        borderStyle: 'solid',
-        // borderWidth: 1,
-        borderRadius: 20,
-    }
-});
 
 export default SettingItem;

@@ -8,16 +8,20 @@ import { faCalendar } from "@fortawesome/free-regular-svg-icons";
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import DeviceToggler from "./DeviceToggler";
 import SettingItem from "./SettingItem";
-import { Text } from "react-native-paper";
+import { Text, useTheme } from "react-native-paper";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { MyTheme } from "../constants/theme";
 
 const IrrigationController = () => {
 
     // to be received from server
     const [pumping, setPumping] = useState(false);
-    const soilMoisture = 70;
+    const soilMoisture = 80;
     const soilMoistureMin = 30;
     const soilMoistureMax = 70;
     const mode = Modes.MANU;
+    
+    const warning = soilMoisture < soilMoistureMin || soilMoisture > soilMoistureMax;
 
     return (
         <View style={styles.container}>
@@ -27,20 +31,29 @@ const IrrigationController = () => {
                     enabled={pumping} 
                     setEnabled={setPumping}
                     disabled={mode !== Modes.MANU}
+                    color={MyTheme.blue}
                 />
             </View>
             <View style={styles.metrics}>
                 <Text style={styles.header}>{Strings.METRIC}</Text>
                 <View style={styles.meter}>
-                    <Text style={{ fontSize: 24 }}>{Strings.SOIL_MOISTURE}</Text>
+                    <View style={{
+                        flex: 1,
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        gap: 20
+                    }}>
+                        { warning ? <FontAwesomeIcon icon={faWarning} color={MyTheme.red} size={32}/> : null}
+                        <Text style={{ fontSize: 24, color: warning ? MyTheme.red : 'black'}}>{Strings.SOIL_MOISTURE}</Text>
+                    </View>                    
                     <AnimatedCircularProgress
                         size={200}
                         width={20}
                         fill={soilMoisture}
                         rotation={0}
-                        tintColor="#0189EA"
+                        tintColor={ warning ? MyTheme.red : MyTheme.blue }
                         onAnimationComplete={() => console.log('onAnimationComplete')}
-                        backgroundColor="#8d99ae">
+                        backgroundColor="#CCCCCC">
                             {
                                 () => (
                                     <>
@@ -66,16 +79,25 @@ const IrrigationController = () => {
                         title={Strings.MODE} 
                         icon={faGear} 
                         target={Headers.PUMP_MODE} 
+                        primColor={MyTheme.blue}
+                        bgColor={MyTheme.lightblue}
                     >
                         <Text>{Modes.modeTitles[mode]}</Text>
                     </SettingItem>
-                    <SettingItem title={Strings.SCHEDULE} icon={faCalendar} disabled={true}>
+                    <SettingItem 
+                        title={Strings.SCHEDULE} 
+                        icon={faCalendar} 
+                        disabled={true} 
+                        primColor={MyTheme.blue}
+                        bgColor={MyTheme.lightblue}>
                         <Text>Not Ready</Text>
                     </SettingItem>
                     <SettingItem 
                         title={Strings.ALLOWED_RANGE} 
                         icon={faWarning}
                         target={Headers.SOIL_MOISTURE_RANGE}
+                        primColor={MyTheme.blue}
+                        bgColor={MyTheme.lightblue}
                     >
                         <Text>{soilMoistureMin}-{soilMoistureMax}%</Text>
                     </SettingItem>

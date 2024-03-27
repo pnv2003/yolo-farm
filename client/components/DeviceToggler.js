@@ -5,7 +5,7 @@ import * as Strings from './../constants/string';
 import { View } from "react-native";
 import { Switch, Text } from "react-native-paper";
 
-const DeviceToggler = ({enabled, setEnabled, disabled}) => {
+const DeviceToggler = ({enabled, setEnabled, disabled, color}) => {
     return (
         <View style={{
             flex: 1,
@@ -15,14 +15,14 @@ const DeviceToggler = ({enabled, setEnabled, disabled}) => {
             justifyContent: 'space-between'
         }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20 }}>
-                <FontAwesomeIcon icon={faDroplet} size={24} color="#0095FF"/>
+                <FontAwesomeIcon icon={faDroplet} size={24} color={color} />
                 <View>
                     <Text>{Strings.WATER_PUMP}</Text>
                     <Text>{enabled ? Strings.ON : Strings.OFF}</Text>
                 </View>
             </View>
             <Switch
-                color="#0095FF"
+                color={color}
                 value={enabled}
                 onValueChange={() => {
                     setEnabled(prev => !prev)

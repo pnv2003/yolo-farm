@@ -3,6 +3,7 @@ import * as Strings from '../constants/string';
 import * as Errors from '../constants/error';
 import { StyleSheet, View } from "react-native";
 import { Button, HelperText, Text, TextInput } from "react-native-paper";
+import { MyTheme } from "../constants/theme";
 
 const SoilMoistureRangeScreen = () => {
 
@@ -16,7 +17,7 @@ const SoilMoistureRangeScreen = () => {
 
     return (
         <View style={styles.container}>
-            <Text>To be added...</Text>
+            <Text style={styles.desc}>{Strings.SOIL_MOISTURE_RANGE_DESCRIPTION}</Text>
             <View style={styles.inputField}>
                 <TextInput 
                     style={styles.input}
@@ -71,13 +72,16 @@ const SoilMoistureRangeScreen = () => {
             </View>
             <Button 
                 style={{
-                    width: '50%'
+                    width: '30%',
+                    height: 50,
+                    justifyContent: 'center'
                 }}
                 icon={"content-save"} 
                 mode="contained"
                 onPress={handleSave}
+                buttonColor={MyTheme.blue}
             >
-                Lưu
+                {Strings.SAVE}
             </Button>
         </View>
     );
@@ -87,8 +91,13 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        gap: 30,
-        justifyContent: 'center'
+        justifyContent: 'center',
+        // padding: 50
+    },
+    desc: {
+        textAlign: 'justify',
+        paddingHorizontal: 50,
+        marginBottom: 20
     },
     inputField: {
         // flex: 1,

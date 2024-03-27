@@ -15,8 +15,10 @@ export const ALLOWED_RANGE = 'Phạm vi';
 export const MODE_AUTOMATIC_DESCRIPTION = "Thiết bị được kích hoạt khi độ ẩm đất vượt quá phạm vi cho phép.";
 export const MODE_SCHEDULED_DESCRIPTION = "Thiết bị có thể được kích hoạt theo lịch biểu được xác định sẵn.";
 export const MODE_MANUAL_DESCRIPTION = "Thiết bị được bật tắt thủ công thông qua ứng dụng.";
+export const SOIL_MOISTURE_RANGE_DESCRIPTION = "Tùy chỉnh phạm vi giá trị của độ ẩm đất để nhận được cảnh báo khi giá trị vượt quá giới hạn, và có thể kích hoạt máy bơm nếu sử dụng chế độ tự động.";
 export const CANCEL = "Hủy bỏ";
 export const CONFIRM = "Xác nhận";
+export const SAVE = "Lưu";
 
 
 //

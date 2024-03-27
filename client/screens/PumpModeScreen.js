@@ -5,6 +5,7 @@ import { View } from "react-native";
 import ModeItem from "../components/ModeItem";
 import { faBook, faCalendar, faWandMagicSparkles } from "@fortawesome/free-solid-svg-icons";
 import { Button, Dialog, Portal, Text } from "react-native-paper";
+import { MyTheme } from "../constants/theme";
 
 const PumpModeScreen = () => {
 
@@ -21,7 +22,7 @@ const PumpModeScreen = () => {
                 title={Strings.AUTOMATIC}
                 description={Strings.MODE_AUTOMATIC_DESCRIPTION}
                 icon={faWandMagicSparkles}
-                color={"blue"}
+                color={MyTheme.blue}
                 selected={mode === Modes.AUTO}
                 onPress={() => {
                     if (mode !== Modes.AUTO) {
@@ -34,7 +35,7 @@ const PumpModeScreen = () => {
                 title={Strings.SCHEDULED}
                 description={Strings.MODE_SCHEDULED_DESCRIPTION}
                 icon={faCalendar}
-                color={"green"}
+                color={MyTheme.green}
                 selected={mode === Modes.SCHED}
                 onPress={() => {
                     if (mode !== Modes.SCHED) {
@@ -47,7 +48,7 @@ const PumpModeScreen = () => {
                 title={Strings.MANUAL}
                 description={Strings.MODE_MANUAL_DESCRIPTION}
                 icon={faBook}
-                color={"orange"}
+                color={MyTheme.orange}
                 selected={mode === Modes.MANU}
                 onPress={() => {
                     if (mode !== Modes.MANU) {
