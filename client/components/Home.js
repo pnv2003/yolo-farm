@@ -7,12 +7,14 @@ import {
   FlatList,
   Dimensions
 } from "react-native";
-import { FontAwesome } from "@expo/vector-icons"; // Import FontAwesome
+import { FontAwesome } from "@expo/vector-icons"; 
 import { useNavigation } from "@react-navigation/core";
+import { TouchableOpacity } from "react-native";
+
 
 const GreenhouseController = () => {
 
-  // TODO: onPress={() => navigation.navigate(Headers.IRRIGATION)}
+  
   const navigation = useNavigation();
 
   const [irrigationMode, setIrrigationMode] = useState("AUTOMATIC");
@@ -32,7 +34,7 @@ const GreenhouseController = () => {
   };
 
   const screenWidth = Dimensions.get("window").width;
-  const containerWidth = screenWidth - 20; // Subtract padding
+  const containerWidth = screenWidth - 20; 
 
   const getUnit = (title) => {
     switch (title) {
@@ -54,14 +56,14 @@ const GreenhouseController = () => {
       mode: irrigationMode,
       toggleMode: toggleIrrigationMode,
       color: "rgba(46, 138, 138, 1)",
-      icon: "tint", // FontAwesome icon name for irrigation
+      icon: "tint", 
     },
     {
       title: "Lighting",
       value: `${lightingPower}`,
       mode: lightingMode,
       color: "rgba(0, 231, 46, 0.8)",
-      icon: "lightbulb-o", // FontAwesome icon name for lighting
+      icon: "lightbulb-o", 
     },
     {
       title: "Temperature",
@@ -69,7 +71,7 @@ const GreenhouseController = () => {
       mode: temperatureMode,
       toggleMode: toggleTemperatureMode,
       color: "rgba(231, 156, 36, 0.8)",
-      icon: "thermometer", // FontAwesome icon name for temperature
+      icon: "thermometer", 
     },
   ];
 
@@ -93,7 +95,6 @@ const GreenhouseController = () => {
       <View style={styles.separator} />
       <View style={styles.rightContent}>
         <View style={styles.iconContainer}>
-          {/* Add FontAwesome icon */}
           <FontAwesome name="gear" size={24} color="white" />
         </View>
         {item.title === "Irrigation" && (
@@ -113,8 +114,20 @@ const GreenhouseController = () => {
           <Text style={styles.warningText}>Warnings on</Text>
         )}
       </View>
+     { /* TODO: onPress={() => navigation.navigate(Headers.IRRIGATION)} */}
+      {item.title === "Irrigation" && (
+        <TouchableOpacity
+          style={styles.ripple}
+          onPress={() => navigation.navigate(Headers.IRRIGATION)}
+        >
+          <View style={styles.iconContainer}>
+            <FontAwesome name="gear" size={24} color="white" />
+          </View>
+        </TouchableOpacity>
+      )}
     </View>
   );
+  
 
   return (
     <FlatList
@@ -131,18 +144,18 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: "center",
     alignItems: "center",
-    paddingVertical: 10, // Add padding to the container
+    paddingVertical: 10, 
   },
   container: {
     flexDirection: "row",
     marginBottom: 10,
     borderRadius: 35,
-    height: 250, // Increase the height of the container
+    height: 250, 
   },
   leftContent: {
     flex: 1,
     justifyContent: "center",
-    paddingRight: 10, // Add padding to the right
+    paddingRight: 10, 
     alignItems: "center",
   },
   separator: {
@@ -179,13 +192,13 @@ const styles = StyleSheet.create({
   },
   bigDataValue: {
     fontSize: 60,
-    color: "rgba(255,255,255,0.5)", // Light white color
+    color: "rgba(255,255,255,0.5)", 
     fontWeight: "bold",
   },
   unitText: {
     fontSize: 12,
-    color: "white", // Light white color
-    marginBottom: 10, // Add margin for separation from the number
+    color: "white", 
+    marginBottom: 10, 
   },
   statusText: {
     fontSize: 14,
