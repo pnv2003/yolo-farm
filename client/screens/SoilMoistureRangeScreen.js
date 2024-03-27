@@ -96,9 +96,12 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },  
     input: {
-        // height: 60,
-        width: '100%',
-        // fontSize: 36
+        height: 75,
+        // flex: 1,
+        // alignItems: 'center',
+        // justifyContent: 'center',
+        // width: '50%',
+        fontSize: 36
     },
 });
 

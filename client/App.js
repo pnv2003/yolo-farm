@@ -9,6 +9,7 @@ import * as Headers from './constants/header';
 import PumpModeScreen from './screens/PumpModeScreen';
 import SoilMoistureRangeScreen from './screens/SoilMoistureRangeScreen';
 import NavigationBar from './components/NavigationBar';
+import GreenhouseController from './components/Home';
 
 const Stack = createNativeStackNavigator();
 
@@ -17,10 +18,15 @@ export default function App() {
     <PaperProvider>
       <NavigationContainer>
         <Stack.Navigator
+          initialRouteName={Headers.HOME}
           screenOptions={{
             header: (props) => <NavigationBar {...props} />
           }}
         >
+          <Stack.Screen
+            name={Headers.HOME}
+            component={GreenhouseController}
+          />
           <Stack.Screen 
             name={Headers.IRRIGATION}
             component={IrrigationScreen}

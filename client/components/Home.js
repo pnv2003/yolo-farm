@@ -1,14 +1,20 @@
 import React, { useState } from "react";
-import { 
-  View, 
-  Text, 
-  StyleSheet, 
-  FlatList, 
-  Dimensions 
+import * as Headers from "../constants/header";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  Dimensions
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons"; // Import FontAwesome
+import { useNavigation } from "@react-navigation/core";
 
 const GreenhouseController = () => {
+
+  // TODO: onPress={() => navigation.navigate(Headers.IRRIGATION)}
+  const navigation = useNavigation();
+
   const [irrigationMode, setIrrigationMode] = useState("AUTOMATIC");
   const [irrigationLevel, setIrrigationLevel] = useState(120);
   const [lightingMode, setLightingMode] = useState("AUTOMATIC");
