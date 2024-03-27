@@ -2,13 +2,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-const ModeItem = ({ title, description, icon, color, selected = false, setMode }) => {
+const ModeItem = ({ title, description, icon, color, selected = false, onPress }) => {
     return (
         <TouchableOpacity 
             style={selected ? styles.selected : styles.container} 
-            onPress={() => {
-                setMode(title);
-            }}
+            onPress={onPress}
         >
             <View>
                 <FontAwesomeIcon icon={icon} color={color} size={72} />

@@ -1,20 +1,23 @@
 import React, { useState } from "react";
 import * as Strings from "../constants/string";
 import * as Headers from "../constants/header";
-import { StyleSheet, Switch, Text, View } from "react-native";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faDroplet, faGear, faWarning } from "@fortawesome/free-solid-svg-icons";
+import * as Modes from "../constants/mode";
+import { StyleSheet, View } from "react-native";
+import { faGear, faWarning } from "@fortawesome/free-solid-svg-icons";
 import { faCalendar } from "@fortawesome/free-regular-svg-icons";
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import DeviceToggler from "./DeviceToggler";
 import SettingItem from "./SettingItem";
+import { Text } from "react-native-paper";
 
 const IrrigationController = () => {
 
     // to be received from server
     const [pumping, setPumping] = useState(false);
     const soilMoisture = 70;
-    const mode = Strings.MANUAL;
+    const soilMoistureMin = 30;
+    const soilMoistureMax = 70;
+    const mode = Modes.MANU;
 
     return (
         <View style={styles.container}>
@@ -23,21 +26,21 @@ const IrrigationController = () => {
                 <DeviceToggler 
                     enabled={pumping} 
                     setEnabled={setPumping}
-                    disabled={mode !== Strings.MANUAL}
+                    disabled={mode !== Modes.MANU}
                 />
             </View>
             <View style={styles.metrics}>
                 <Text style={styles.header}>{Strings.METRIC}</Text>
                 <View style={styles.meter}>
-                    <Text>{Strings.SOIL_MOISTURE}</Text>
+                    <Text style={{ fontSize: 24 }}>{Strings.SOIL_MOISTURE}</Text>
                     <AnimatedCircularProgress
                         size={200}
                         width={20}
                         fill={soilMoisture}
                         rotation={0}
-                        tintColor="#00e0ff"
+                        tintColor="#0189EA"
                         onAnimationComplete={() => console.log('onAnimationComplete')}
-                        backgroundColor="#3d5875">
+                        backgroundColor="#8d99ae">
                             {
                                 () => (
                                     <>
@@ -53,19 +56,28 @@ const IrrigationController = () => {
             </View>
             <View style={styles.settings}>
                 <Text style={styles.header}>{Strings.SETTINGS}</Text>
-                <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap' }}>
+                <View style={{ 
+                    flex: 1, 
+                    flexDirection: 'row', 
+                    flexWrap: 'wrap',
+                    gap: 10
+                }}>
                     <SettingItem 
                         title={Strings.MODE} 
                         icon={faGear} 
                         target={Headers.PUMP_MODE} 
                     >
-                        <Text>{mode}</Text>
+                        <Text>{Modes.modeTitles[mode]}</Text>
                     </SettingItem>
-                    <SettingItem title={Strings.SCHEDULE} icon={faCalendar}>
-                        <Text>Hello</Text>
+                    <SettingItem title={Strings.SCHEDULE} icon={faCalendar} disabled={true}>
+                        <Text>Not Ready</Text>
                     </SettingItem>
-                    <SettingItem title={Strings.ALLOWED_RANGE} icon={faWarning}>
-                        <Text>Hello</Text>
+                    <SettingItem 
+                        title={Strings.ALLOWED_RANGE} 
+                        icon={faWarning}
+                        target={Headers.SOIL_MOISTURE_RANGE}
+                    >
+                        <Text>{soilMoistureMin}-{soilMoistureMax}%</Text>
                     </SettingItem>
                 </View>
             </View>
@@ -76,25 +88,29 @@ const IrrigationController = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        width: '100%'
+        width: '100%',
+        // backgroundColor: '#C3E6FF'
     },
     devices: {
         flex: 1,
         padding: 20,
-        gap: 20
-        // backgroundColor: 'skyblue'
+        gap: 20,
+        // backgroundColor: 'orange',
+        borderRadius: 30
     },
     metrics: {
         flex: 3,
         padding: 20,
-        gap: 20
-        // backgroundColor: 'skyblue'
+        gap: 20,
+        // backgroundColor: 'skyblue',
+        borderRadius: 30
     },
     settings: {
-        flex: 1,
+        flex: 1.5,
         padding: 20,
-        gap: 20
-        // backgroundColor: 'lightgreen'
+        gap: 20,
+        // backgroundColor: 'lightgreen',
+        borderRadius: 30
     },
     meter: {
         flex: 1,
