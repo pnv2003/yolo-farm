@@ -1,4 +1,4 @@
-const host = 'http://localhost:8080';
+const host = '';
 
 export async function sendGetRequest(path, errorMessage) {
     try {

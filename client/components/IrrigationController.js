@@ -12,25 +12,32 @@ import SettingItem from "./SettingItem";
 import { Text } from "react-native-paper";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { MyTheme } from "../constants/theme";
+import { sendGetRequest } from "../utils/request";
 
 const IrrigationController = () => {
 
     const [soilMoisture, setSoilMoisture] = useState(80);
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setSoilMoisture(Math.floor(Math.random()*100));
-        }, 5000);
-
-        return () => clearInterval(interval);
-    }, []);
-
-    // to be received from server
     const [pumping, setPumping] = useState(false);
     const soilMoistureMin = 30;
     const soilMoistureMax = 70;
     const mode = Modes.MANUAL;
     const warning = soilMoisture < soilMoistureMin || soilMoisture > soilMoistureMax;
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            sendGetRequest('https://io.adafruit.com/api/v2/thanhduy/feeds/pumb', "Failed")
+                .then((data) => {
+                    setPumping(data.last_value == 1);
+                });
+
+            sendGetRequest('https://io.adafruit.com/api/v2/thanhduy/feeds/soil-moisture', "Failed").
+                then((data) => {
+                    console.log(data.last_value);
+                    setSoilMoisture(parseInt(data.last_value));
+                });
+        }, Numbers.REFRESH_INTERVAL);
+        return () => clearInterval(interval);
+    }, []);
 
     return (
         <View style={styles.container}>
