@@ -1,6 +1,6 @@
 const ada = require("../config/adafruit");
 
-const feed_names = ["tranbaophuc423/feeds/bbc-temp", "tranbaophuc423/feeds/bbc-led"];
+const feed_names = ["thanhduy/feeds/soil-moisture", "/thanhduy/feeds/pumb"];
 
 feed_names.forEach(feed_name => {
   ada.subscribe(feed_name, (err) => {
