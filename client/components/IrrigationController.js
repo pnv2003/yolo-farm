@@ -3,6 +3,7 @@ import * as Strings from "../constants/string";
 import * as Headers from "../constants/header";
 import * as Modes from "../constants/mode";
 import * as Numbers from "../constants/number";
+import * as APIs from "../constants/api";
 import { StyleSheet, View } from "react-native";
 import { faGear, faWarning } from "@fortawesome/free-solid-svg-icons";
 import { faCalendar } from "@fortawesome/free-regular-svg-icons";
@@ -25,13 +26,13 @@ const IrrigationController = () => {
 
     useEffect(() => {
         const interval = setInterval(() => {
-            sendGetRequest('https://io.adafruit.com/api/v2/thanhduy/feeds/pumb', "Failed")
+            sendGetRequest(APIs.pumpFeed, Strings.WATER_PUMP)
                 .then((data) => {
                     setPumping(data.last_value == 1);
                 });
 
-            sendGetRequest('https://io.adafruit.com/api/v2/thanhduy/feeds/soil-moisture', "Failed").
-                then((data) => {
+            sendGetRequest(APIs.soilMoistureFeed, Strings.SOIL_MOISTURE)
+                .then((data) => {
                     console.log(data.last_value);
                     setSoilMoisture(parseInt(data.last_value));
                 });
