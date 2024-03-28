@@ -1,27 +1,15 @@
 const ada = require("../config/adafruit");
 
-const feed_names = ["thanhduy/feeds/soil-moisture", "/thanhduy/feeds/pumb"];
-
-feed_names.forEach(feed_name => {
-  ada.subscribe(feed_name, (err) => {
-    if (err) {
-      console.error("Error subscribing to feed_name:", err);
-      throw err;
-    }
-    console.log(`Subscribed to ${feed_name} successfully`);
-  });
-});
-
 function get_humi(callback) {
   ada.on("message", (feed_name, valueLoad) => {
-    if(feed_name==feed_names[0]){
+    if(feed_name==process.env.MOI_SENSOR){
       callback(valueLoad.toString());
     }
   });
 }
 
 function act_pump() {
-  ada.publish(feed_names[1], "1", { qos: 0, retain: false }, (error) => {
+  ada.publish(process.env.PUMP_SENSOR, "1", { qos: 0, retain: false }, (error) => {
     if (error) {
       console.error("Error publishing message:", error);
       throw error;
@@ -31,7 +19,7 @@ function act_pump() {
 }
 
 function inact_pump() {
-  ada.publish(feed_names[1], "0", { qos: 0, retain: false }, (error) => {
+  ada.publish(process.env.PUMP_SENSOR, "0", { qos: 0, retain: false }, (error) => {
     if (error) {
       console.error("Error publishing message:", error);
       throw error;

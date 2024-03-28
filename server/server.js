@@ -2,6 +2,7 @@ const express = require('express');
 require('dotenv').config();
 
 const apiRouter = require('./routes');
+const gateway = require('./gateway')
 
 // App setup
 const app = express();

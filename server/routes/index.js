@@ -1,5 +1,5 @@
 const express = require('express');
-const watering = require('./watering_mode');
+const watering = require('./watering');
 
 const router = express.Router();
 
