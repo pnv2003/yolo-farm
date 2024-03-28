@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 require('dotenv').config();
 
 const apiRouter = require('./routes');
@@ -7,6 +8,17 @@ const gateway = require('./gateway')
 // App setup
 const app = express();
 const port = process.env.PORT || 8080;
+
+const corsOptions = {
+  origin: process.env.FRONTEND_URL,
+  credentials: true
+};
+
+// Middlewares
+app.use(express.static('public'));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(cors(corsOptions));
 
 // Every route should start with /api
 app.use('/api', apiRouter);
