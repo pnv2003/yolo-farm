@@ -49,10 +49,10 @@ const PumpModeScreen = () => {
                 description={Strings.MODE_MANUAL_DESCRIPTION}
                 icon={faBook}
                 color={MyTheme.orange}
-                selected={mode === Modes.MANU}
+                selected={mode === Modes.MANUAL}
                 onPress={() => {
-                    if (mode !== Modes.MANU) {
-                        setPendingMode(Modes.MANU);
+                    if (mode !== Modes.MANUAL) {
+                        setPendingMode(Modes.MANUAL);
                         setConfirmVisible(true);
                     }
                 }}

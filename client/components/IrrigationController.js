@@ -1,26 +1,35 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as Strings from "../constants/string";
 import * as Headers from "../constants/header";
 import * as Modes from "../constants/mode";
+import * as Numbers from "../constants/number";
 import { StyleSheet, View } from "react-native";
 import { faGear, faWarning } from "@fortawesome/free-solid-svg-icons";
 import { faCalendar } from "@fortawesome/free-regular-svg-icons";
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import DeviceToggler from "./DeviceToggler";
 import SettingItem from "./SettingItem";
-import { Text, useTheme } from "react-native-paper";
+import { Text } from "react-native-paper";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { MyTheme } from "../constants/theme";
 
 const IrrigationController = () => {
 
+    const [soilMoisture, setSoilMoisture] = useState(80);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setSoilMoisture(Math.floor(Math.random()*100));
+        }, 5000);
+
+        return () => clearInterval(interval);
+    }, []);
+
     // to be received from server
     const [pumping, setPumping] = useState(false);
-    const soilMoisture = 80;
     const soilMoistureMin = 30;
     const soilMoistureMax = 70;
-    const mode = Modes.MANU;
-    
+    const mode = Modes.MANUAL;
     const warning = soilMoisture < soilMoistureMin || soilMoisture > soilMoistureMax;
 
     return (
@@ -30,7 +39,7 @@ const IrrigationController = () => {
                 <DeviceToggler 
                     enabled={pumping} 
                     setEnabled={setPumping}
-                    disabled={mode !== Modes.MANU}
+                    disabled={mode !== Modes.MANUAL}
                     color={MyTheme.blue}
                 />
             </View>
@@ -52,7 +61,7 @@ const IrrigationController = () => {
                         fill={soilMoisture}
                         rotation={0}
                         tintColor={ warning ? MyTheme.red : MyTheme.blue }
-                        onAnimationComplete={() => console.log('onAnimationComplete')}
+                        // onAnimationComplete={() => console.log('onAnimationComplete')}
                         backgroundColor="#CCCCCC">
                             {
                                 () => (
