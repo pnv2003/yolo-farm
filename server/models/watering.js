@@ -1,4 +1,5 @@
-const ada = require("../config/adafruit");
+const mqttClient = require("../config/adafruit");
+const ada = mqttClient.getClient()
 
 function get_humi(callback) {
   ada.on("message", (feed_name, valueLoad) => {
