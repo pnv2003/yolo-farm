@@ -3,7 +3,7 @@ const mqtt = require("mqtt");
 
 const connectUrl = "mqtt://io.adafruit.com";
 const username = process.env.ADA_USERNAME || "tranbaophuc423";
-const password = process.env.ADA_PASSWORD || "aio_YwXo71FNhRgm23IgEpEUB4eOwyOb";
+const password = process.env.ADA_PASSWORD || "";
 
 class MQTTClient {
     constructor() {
