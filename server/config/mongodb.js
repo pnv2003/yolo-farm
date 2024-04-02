@@ -3,36 +3,52 @@ const mongoose = require('mongoose');
 
 const MONGODB_URI =
   process.env.MONGODB_URI ||
-  "mongodb+srv://phuchuynh0904:09042003@cluster0.krbalrf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+  "mongodb+srv://phuchuynh0904:09042003@cluster0.krbalrf.mongodb.net/DADN-AI?retryWrites=true&w=majority&appName=Cluster0";
 
-// Connect to MongoDB
-mongoose.connect(MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  maxPoolSize: 10
-});
+class DatabaseClient{
+  connection = null;
+  
+  constructor() {
+    if (!this.connection){
+      this.connection = mongoose.connection;
 
-mongoose.Promise = global.Promise;
+      this.connection
+      .on('open', console.info.bind(console, 'MongoDB connection: open'))
+      .on('close', console.info.bind(console, 'MongoDB connection: close'))
+      .on('disconnected', console.info.bind(console, 'MongoDB connection: disconnecting'))
+      .on('disconnected', console.info.bind(console, 'MongoDB connection: disconnected'))
+      .on('reconnected', console.info.bind(console, 'MongoDB connection: reconnected'))
+      .on('fullsetup', console.info.bind(console, 'MongoDB connection: fullsetup'))
+      .on('all', console.info.bind(console, 'MongoDB connection: all'))
+      .on('error', console.error.bind(console, 'MongoDB connection: error:'));
+    }
+    this.connect();
+  }
 
-// Get the default connection
-const db = mongoose.connection;
+  async connect() {
+    try {
+      await mongoose.connect(
+        MONGODB_URI,
+        {
+          maxPoolSize: 10
+        }
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
-// Event listeners for connection
-db.once('open', () => {
-  console.log('Connected to MongoDB');
-});
+  async close() {
+    try {
+      await this.connection.close();
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
-db.on('error', error => {
-  console.error('Error in MongoDB connection:', error);
-});
+  getClient() {
+    return this.connection;
+  }
+}
 
-db.on('disconnected', () => {
-  console.log('MongoDB disconnected, attempting to reconnect (if needed)');
-  // mongoose.connect(MONGODB_URI, {
-  //   useNewUrlParser: true,
-  //   useUnifiedTopology: true,
-  //   maxPoolSize: 10
-  // });
-});
-
-module.exports = db;
+module.exports = new DatabaseClient();

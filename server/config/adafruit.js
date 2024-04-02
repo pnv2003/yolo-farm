@@ -32,7 +32,4 @@ class MQTTClient {
     }
 }
 
-// Singleton instance of MQTTClient
-const mqttClientInstance = new MQTTClient();
-
-module.exports = mqttClientInstance;
+module.exports = new MQTTClient();
