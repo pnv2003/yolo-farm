@@ -1,24 +1,33 @@
-const { get_humi, act_pump, inact_pump } = require("../models/watering");
+const water_model = require("../models/watering");
 
-let status = "auto";
+async function getMoisture(req, res) {
+  value = await water_model.getMoisture();
+  res.json(value);
+}
 
-get_humi((valueLoad) => {
-  console.log("Soil Moisture:", valueLoad);
-  if (valueLoad < 60) act_pump();
-  if (valueLoad > 80) inact_pump();
-});
+async function setMoisture(req, res) {
+  try {
+    await water_model.setMoisture(req.body.moisture);
+    checkMoisture = await water_model.checkMoisture(req.body.moisture);
+    res.send("Successful");
+  } catch (err) {
+    throw err;
+  }
+}
 
-function changeMode(req, res, next){
-    try{
-        status=req.body.mode;
-        console.log(status);
-        res.json("complete");
-    }
-    catch(err){
-        next(err);
-    }
+async function getMode(req, res) {
+  value = await water_model.getMode();
+  res.json(value);
+}
+
+async function setMode(req, res) {
+  await water_model.setMode(req.query.mode);
+  res.send("Successful");
 }
 
 module.exports = {
-    changeMode
-}
+  getMoisture,
+  setMoisture,
+  getMode,
+  setMode,
+};

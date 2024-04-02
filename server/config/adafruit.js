@@ -2,8 +2,8 @@ require("dotenv").config();
 const mqtt = require("mqtt");
 
 const connectUrl = "mqtt://io.adafruit.com";
-const username = process.env.ADA_USERNAME || "KunagisaTomo";
-const password = process.env.ADA_PASSWORD || "aio_HRtc72Ttz9TFCV70EIqqOBJUQkL8";
+const username = process.env.ADA_USERNAME || "tranbaophuc423";
+const password = process.env.ADA_PASSWORD || "aio_YwXo71FNhRgm23IgEpEUB4eOwyOb";
 
 class MQTTClient {
     constructor() {

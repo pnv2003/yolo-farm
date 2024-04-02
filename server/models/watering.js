@@ -1,32 +1,59 @@
-const mqttClient = require("../config/adafruit");
-const ada = mqttClient.getClient()
+const axios = require("axios");
 
-function get_humi(callback) {
-  ada.on("message", (feed_name, valueLoad) => {
-    if(feed_name==process.env.MOI_SENSOR){
-      callback(valueLoad.toString());
+var mode = "Automatic"; //Automatic or Manual
+var soil_moisture = 0; // cần lấy giá trị mới nhất trong database
+var min_moisture = 40; // lấy từ database
+var max_moisture = 60; // lấy từ database
+
+async function getMoisture() {
+  return { soilMoisture: soil_moisture };
+}
+
+async function setMoisture(value) {
+  soil_moisture = value;
+}
+
+async function getMode() {
+  return { Mode: mode };
+}
+
+async function setMode(value) {
+  mode = value;
+}
+
+async function checkMoisture(value) {
+  if (value < min_moisture) {
+    if (mode == "Automatic") {
+      await act_pump();
+    } else {
+      console.log("Warning: Soil Moisture is low");
     }
+  } else if (value > max_moisture) {
+    if (mode == "Automatic") {
+      await inact_pump();
+    } else {
+      console.log("Warning: Soil Moisture is high");
+    }
+  }
+  return "Successful"
+}
+
+async function act_pump() {
+  axios.post("http://localhost:8081/gatewayAppApi/pumb", {
+    pumb: 1,
   });
 }
 
-function act_pump() {
-  ada.publish(process.env.PUMP_SENSOR, "1", { qos: 0, retain: false }, (error) => {
-    if (error) {
-      console.error("Error publishing message:", error);
-      throw error;
-    }
-    console.log("Pump On");
+async function inact_pump() {
+  axios.post("http://localhost:8081/gatewayAppApi/pumb", {
+    pumb: 0,
   });
 }
 
-function inact_pump() {
-  ada.publish(process.env.PUMP_SENSOR, "0", { qos: 0, retain: false }, (error) => {
-    if (error) {
-      console.error("Error publishing message:", error);
-      throw error;
-    }
-    console.log("Pump Off");
-  });
-}
-
-module.exports = { get_humi, act_pump, inact_pump };
+module.exports = {
+  getMoisture,
+  setMoisture,
+  getMode,
+  setMode,
+  checkMoisture
+};
