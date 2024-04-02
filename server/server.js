@@ -3,13 +3,14 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const mqttClient = require("./config/adafruit");
 const axios = require('axios');
+require('./db');
 
 // Import routes
 const apiRouter = require('./routes');
 
 // App setup for request port
 const requestApp = express();
-const requestPort = process.env.PORT || 8080;
+const requestPort = process.env.REQUEST_PORT || 8080;
 
 const corsOptions = {
   origin: process.env.FRONTEND_URL,
@@ -40,7 +41,7 @@ requestApp.listen(requestPort, () => {
 
 // App setup for gateway port
 const gatewayApp = express();
-const gatewayPort = 8081;
+const gatewayPort = process.env.GATEWAY_PORT || 8081;
 
 gatewayApp.use(express.static('public'));
 gatewayApp.use(express.urlencoded({ extended: true }));
