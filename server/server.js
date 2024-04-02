@@ -1,9 +1,14 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const mqttClient = require("./config/adafruit");
 const axios = require('axios');
-require('./db');
+
+const { convertName } = require('./config/utils');
+
+const MQTTClient = require("./config/adafruit");
+const ada = MQTTClient.getClient();
+const DatabaseClient = require("./config/mongodb");
+const db = DatabaseClient.getClient();
 
 // Import routes
 const apiRouter = require('./routes');
@@ -49,18 +54,9 @@ gatewayApp.use(express.json());
 gatewayApp.use(cors(corsOptions));
 gatewayApp.use(bodyParser.json());
 
-gatewayApp.post('/mqtt-data', (req, res) => {
-  const { feed_name, valueLoad } = req.body;
-
-  console.log(`Received message for ${feed_name}: ${valueLoad}`);
-
-  res.status(200).send('Data received successfully');
-});
-
 gatewayApp.listen(gatewayPort, () => {
   console.log(`Gateway server running on port ${gatewayPort}`);
 
-  const ada = mqttClient.getClient();
   const feed_names = [
     process.env.MOI_SENSOR,
     process.env.PUMP_SENSOR,
@@ -80,13 +76,17 @@ gatewayApp.listen(gatewayPort, () => {
     });
   });
 
-  ada.on("message", (feed_name, valueLoad) => {
-    // axios.post(`http://localhost:${gatewayPort}/mqtt-data`, { feed_name, valueLoad })
-    //   .then(response => {
-    //     console.log(response.data);
-    //   })
-    //   .catch(error => {
-    //     console.error('Error sending MQTT data to Express endpoint:', error);
-    //   });
+ 
+
+  ada.on("message", async (feed_name, valueLoad) => {
+    const collection_name = await convertName(feed_name.split("/").slice(-1)[0]);
+    const timestamp = String(Date.now());
+
+    db.collection(collection_name).insertOne({
+        timestamp: timestamp,
+        value: Number(valueLoad.toString())
+    });
+
+    console.log(`Insert ${valueLoad} from ${feed_name} to database.`);
   });
 });
