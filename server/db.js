@@ -1,4 +1,5 @@
-const db = require("./config/mongodb");
+const DatabaseClient = require("./config/mongodb");
+const db = DatabaseClient.getClient();
 
 async function setupDatabase() {
   try {
@@ -76,7 +77,8 @@ async function setupDatabase() {
 
     console.log("Completely created data");
 
-    db.close()
+    disconnect();
+
   } catch (error) {
     console.error("Error setting up database:", error);
   }
