@@ -1,28 +1,38 @@
 require("dotenv").config();
-const { MongoClient} = require("mongodb");
+const mongoose = require('mongoose');
 
 const MONGODB_URI =
   process.env.MONGODB_URI ||
   "mongodb+srv://phuchuynh0904:09042003@cluster0.krbalrf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
-// connect MongoDB
-const client = new MongoClient(MONGODB_URI, {
+// Connect to MongoDB
+mongoose.connect(MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
   maxPoolSize: 10
 });
 
-let database;
+mongoose.Promise = global.Promise;
 
-async function connectToDatabase() {
-  try {
-    await client.connect();
-    console.log("Connected to MongoDB");
-    database = client.db("YOLO Farm");
-    console.log("Connected to Database DADN-AI");
-  } catch (error) {
-    console.error("Error connecting to MongoDB:", error);
-  }
-}
+// Get the default connection
+const db = mongoose.connection;
 
-connectToDatabase();
+// Event listeners for connection
+db.once('open', () => {
+  console.log('Connected to MongoDB');
+});
 
-module.exports = database;
+db.on('error', error => {
+  console.error('Error in MongoDB connection:', error);
+});
+
+db.on('disconnected', () => {
+  console.log('MongoDB disconnected, attempting to reconnect (if needed)');
+  // mongoose.connect(MONGODB_URI, {
+  //   useNewUrlParser: true,
+  //   useUnifiedTopology: true,
+  //   maxPoolSize: 10
+  // });
+});
+
+module.exports = db;
