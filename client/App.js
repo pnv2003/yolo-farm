@@ -1,19 +1,120 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import { PaperProvider } from 'react-native-paper';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import IrrigationScreen from './screens/IrrigationScreen';
 import * as Strings from './constants/string';
 import * as Headers from './constants/header';
+import * as APIs from "./constants/api";
 import PumpModeScreen from './screens/PumpModeScreen';
 import SoilMoistureRangeScreen from './screens/SoilMoistureRangeScreen';
 import NavigationBar from './components/NavigationBar';
 import GreenhouseController from './components/Home';
+import * as Notifications from "expo-notifications";
+import * as Device from 'expo-device';
+import Constants from 'expo-constants';
+import { useEffect, useRef, useState } from 'react';
+import { sendGetRequest } from './utils/request';
+
+Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: false,
+        shouldSetBadge: false
+    })
+});
+
+async function registerForPushNotificationAsync() {
+  let token;
+
+  if (Platform.OS === 'android') {
+      await Notifications.setNotificationChannelAsync('default', {
+          name: 'default',
+          importance: Notifications.AndroidImportance.MAX,
+          vibrationPattern: [0, 250, 250, 250],
+          lightColor: '#FF231F7C'
+      });
+  }
+
+  if (Device.isDevice) {
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+          const { status } = await Notifications.requestPermissionsAsync();
+          finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+          alert('Failed to get push token for push notification!');
+          return;
+      }
+
+      token = (await Notifications.getExpoPushTokenAsync(
+          { projectId: Constants.expoConfig.extra.eas.projectId }
+      ));
+      // console.log(token);
+  } else {
+      alert('Must use physical device for Push Notifications');
+  }
+
+  return token.data;
+}
+
+async function sendPushNotification(expoPushToken) {
+
+  const message = {
+      to: expoPushToken,
+      sound: 'default',
+      title: 'TURTLE',
+      body: 'badass',
+      data: { dat: 'dattebayo' }
+  };
+
+  await fetch('https://exp.host/--/api/v2/push/send', {
+      method: 'POST',
+      headers: {
+          Accept: 'application/json',
+          'Accept-encoding': 'gzip, deflate',
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(message)
+  })
+}
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+
+  const [expoPushToken, setExpoPushToken] = useState('');
+  const [notification, setNotification] = useState(false);
+  const notificationListener = useRef();
+  const responseListener = useRef();
+
+  useEffect(() => {
+    registerForPushNotificationAsync().then(token => setExpoPushToken(token));
+
+    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+      setNotification(notification);
+    });
+
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+      console.log(response);
+    });
+
+    sendGetRequest(APIs.soilMoistureFeed, Strings.SOIL_MOISTURE)
+      .then((data) => {
+        if (data.last_value > 80) {
+          // console.log("notif sent!");
+          sendPushNotification(expoPushToken);
+        }
+      });
+
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener.current);
+      Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }, []);
+
   return (
     <PaperProvider>
       <NavigationContainer>
