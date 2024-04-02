@@ -77,15 +77,15 @@ gatewayApp.listen(gatewayPort, () => {
   });
 
   ada.on("message", async (feed_name, valueLoad) => {
-    // const collection_name = await convertName(feed_name.split("/").slice(-1)[0]);
-    // const timestamp = String(Date.now());
+    const collection_name = await convertName(feed_name.split("/").slice(-1)[0]);
+    const timestamp = String(Date.now());
 
-    // db.collection(collection_name).insertOne({
-    //     timestamp: timestamp,
-    //     value: Number(valueLoad.toString())
-    // });
+    db.collection(collection_name).insertOne({
+        timestamp: timestamp,
+        value: Number(valueLoad.toString())
+    });
 
-    // console.log(`Insert ${valueLoad} from ${feed_name} to database.`);
+    console.log(`Insert ${valueLoad} from ${feed_name} to database.`);
     if (feed_name == "thanhduy/feeds/soil-moisture") {
       axios.post("http://localhost:8080/api/watering/post-moisture", {
         moisture: valueLoad.toString(),
