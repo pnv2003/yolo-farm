@@ -7,20 +7,20 @@ async function setupDatabase() {
     await db.collection("Species").drop();
     await db.collection("Plants").drop();
     await db.collection("Devices").drop();
-    await db.collection("LightingCondition").drop();
-    await db.collection("TemperatureCondition").drop();
-    await db.collection("SoilMoisture").drop();
-    await db.collection("AirHumidity").drop();
+    await db.collection("Lighting Condition").drop();
+    await db.collection("Temperature Condition").drop();
+    await db.collection("Soil Moisture").drop();
+    await db.collection("Air Humidity").drop();
 
     // Create collections
     await db.createCollection("Environment");
     await db.createCollection("Species");
     await db.createCollection("Plants");
     await db.createCollection("Devices");
-    await db.createCollection("LightingCondition");
-    await db.createCollection("TemperatureCondition");
-    await db.createCollection("SoilMoisture");
-    await db.createCollection("AirHumidity");
+    await db.createCollection("Lighting Condition");
+    await db.createCollection("Temperature Condition");
+    await db.createCollection("Soil Moisture");
+    await db.createCollection("Air Humidity");
 
     // Insert documents
     await db.collection("Environment").insertOne({ _id: 1 });
