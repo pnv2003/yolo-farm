@@ -25,40 +25,38 @@ const IrrigationController = () => {
     const mode = Modes.MANUAL;
     const warning = soilMoisture < soilMoistureMin || soilMoisture > soilMoistureMax;
 
-    useEffect(() => {
-        const client = new Paho.Client(
-            AIO_HOST, 
-            AIO_PORT, 
-            AIO_PATH, 
-            mqttClientID()
-        );
+    const client = new Paho.Client(
+        AIO_HOST, 
+        AIO_PORT, 
+        AIO_PATH, 
+        mqttClientID()
+    );
 
-        client.connect({
-            onSuccess: () => {
-                console.log("Connected!");
-                client.subscribe(APIs.SOIL_MOISTURE);
-                client.subscribe(APIs.PUMP);
-            },
-            onFailure: (error) => {
-                console.log("Failed to connect!");
-                console.log(error.errorMessage);
-            },
-            userName: AIO_USERNAME,
-            password: AIO_KEY
-        })
-        client.onMessageArrived = (message) => {
-            console.log("Topic: " + message.destinationName);
-            console.log("Message: " + message.payloadString);
+    client.connect({
+        onSuccess: () => {
+            console.log("Connected!");
+            client.subscribe(APIs.SOIL_MOISTURE);
+            client.subscribe(APIs.PUMP);
+        },
+        onFailure: (error) => {
+            console.log("Failed to connect!");
+            console.log(error.errorMessage);
+        },
+        userName: AIO_USERNAME,
+        password: AIO_KEY
+    })
+    client.onMessageArrived = (message) => {
+        console.log("Topic: " + message.destinationName);
+        console.log("Message: " + message.payloadString);
 
-            topic = message.destinationName;
-            data = message.payloadString;
-            if (topic === APIs.PUMP) {
-                setPumping(data == "1")
-            } else if (topic === APIs.SOIL_MOISTURE) {
-                setSoilMoisture(parseInt(data));
-            }
+        topic = message.destinationName;
+        data = message.payloadString;
+        if (topic === APIs.PUMP) {
+            setPumping(data == "1")
+        } else if (topic === APIs.SOIL_MOISTURE) {
+            setSoilMoisture(parseInt(data));
         }
-    }, []);
+    }
 
     return (
         <View style={styles.container}>
@@ -66,7 +64,13 @@ const IrrigationController = () => {
                 <Text style={styles.header}>{Strings.DEVICE}</Text>
                 <DeviceToggler 
                     enabled={pumping} 
-                    setEnabled={setPumping}
+                    onSwitch={() => {
+                        setPumping(prev => !prev);
+
+                        let msg = new Paho.Message(pumping ? 1 : 0);
+                        msg.destinationName = APIs.PUMP;
+                        client.send(msg);
+                    }}
                     disabled={mode !== Modes.MANUAL}
                     color={MyTheme.blue}
                 />

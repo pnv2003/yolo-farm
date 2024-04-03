@@ -5,7 +5,7 @@ import * as Strings from './../constants/string';
 import { View } from "react-native";
 import { Switch, Text } from "react-native-paper";
 
-const DeviceToggler = ({enabled, setEnabled, disabled, color}) => {
+const DeviceToggler = ({enabled, onSwitch, disabled, color}) => {
     return (
         <View style={{
             flex: 1,
@@ -24,9 +24,7 @@ const DeviceToggler = ({enabled, setEnabled, disabled, color}) => {
             <Switch
                 color={color}
                 value={enabled}
-                onValueChange={() => {
-                    setEnabled(prev => !prev)
-                }}
+                onValueChange={onSwitch}
                 disabled={disabled}
             />
         </View>
