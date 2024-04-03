@@ -6,12 +6,13 @@ const axios = require("axios");
 const { convertName } = require("./config/utils");
 
 const MQTTClient = require("./config/adafruit");
-const ada = MQTTClient.getClient();
+global.ada = MQTTClient.getClient();
 // const DatabaseClient = require("./config/mongodb");
 // const db = DatabaseClient.getClient();
 
 // Import routes
-const apiRouter = require("./routes");
+const apiRouter = require("./routes/index");
+const gatewayApiRouter = require("./routes/gateway");
 
 // App setup for request port
 const requestApp = express();
@@ -77,15 +78,19 @@ gatewayApp.listen(gatewayPort, () => {
   });
 
   ada.on("message", async (feed_name, valueLoad) => {
-    const collection_name = await convertName(feed_name.split("/").slice(-1)[0]);
-    const timestamp = String(Date.now());
+    // const collection_name = await convertName(
+    //   feed_name.split("/").slice(-1)[0]
+    // );
+    // const timestamp = String(Date.now());
 
-    db.collection(collection_name).insertOne({
-        timestamp: timestamp,
-        value: Number(valueLoad.toString())
-    });
+    // db.collection(collection_name).insertOne({
+    //   timestamp: timestamp,
+    //   value: Number(valueLoad.toString()),
+    // });
 
-    console.log(`Insert ${valueLoad} from ${feed_name} to database.`);
+    // console.log(`Insert ${valueLoad} from ${feed_name} to database.`);
+
+
     if (feed_name == "thanhduy/feeds/soil-moisture") {
       axios.post("http://localhost:8080/api/watering/post-moisture", {
         moisture: valueLoad.toString(),
@@ -94,33 +99,4 @@ gatewayApp.listen(gatewayPort, () => {
   });
 });
 
-
-gatewayApp.post("/gatewayAppApi/pumb", (req, res) => {
-  if (req.body.pumb == 1) {
-    ada.publish(
-      process.env.PUMP_SENSOR,
-      "1",
-      { qos: 1, retain: false },
-      (error) => {
-        if (error) {
-          console.error("Error publishing message:", error);
-          throw error;
-        }
-        console.log("Pump On");
-      }
-    );
-  } else {
-    ada.publish(
-      process.env.PUMP_SENSOR,
-      "0",
-      { qos: 1, retain: false },
-      (error) => {
-        if (error) {
-          console.error("Error publishing message:", error);
-          throw error;
-        }
-        console.log("Pump Off");
-      }
-    );
-  }
-});
+gatewayApp.use("/gatewayAppApi",gatewayApiRouter);

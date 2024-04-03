@@ -2,8 +2,8 @@ const axios = require("axios");
 
 var mode = "Automatic"; //Automatic or Manual
 var soil_moisture = 0; // cần lấy giá trị mới nhất trong database
-var min_moisture = 40; // lấy từ database
-var max_moisture = 60; // lấy từ database
+var min_moisture = 40;
+var max_moisture = 60;
 
 async function getMoisture() {
   return { soilMoisture: soil_moisture };
@@ -21,6 +21,22 @@ async function setMode(value) {
   mode = value;
 }
 
+async function get_min_moisture() {
+  return { minMoisture: min_moisture };
+}
+
+async function set_min_moisture(value) {
+  min_moisture = value;
+}
+
+async function get_max_moisture() {
+  return { maxMoisture: max_moisture };
+}
+
+async function set_max_moisture(value) {
+  max_moisture = value;
+}
+
 async function checkMoisture(value) {
   if (value < min_moisture) {
     if (mode == "Automatic") {
@@ -35,7 +51,7 @@ async function checkMoisture(value) {
       console.log("Warning: Soil Moisture is high");
     }
   }
-  return "Successful"
+  return "Successful";
 }
 
 async function act_pump() {
@@ -55,5 +71,9 @@ module.exports = {
   setMoisture,
   getMode,
   setMode,
-  checkMoisture
+  get_min_moisture,
+  set_min_moisture,
+  get_max_moisture,
+  set_max_moisture,
+  checkMoisture,
 };
