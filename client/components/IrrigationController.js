@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import * as Strings from "../constants/string";
 import * as Headers from "../constants/header";
 import * as Modes from "../constants/mode";
-import * as Numbers from "../constants/number";
 import * as APIs from "../constants/api";
 import { StyleSheet, View } from "react-native";
 import { faGear, faWarning } from "@fortawesome/free-solid-svg-icons";
@@ -13,11 +12,13 @@ import SettingItem from "./SettingItem";
 import { Text } from "react-native-paper";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { MyTheme } from "../constants/theme";
-import { sendGetRequest } from "../utils/request";
+import Paho from 'paho-mqtt';
+import { AIO_KEY, AIO_USERNAME } from "../config/account";
+import { AIO_HOST, AIO_PATH, AIO_PORT, mqttClientID } from "../config/connect";
 
 const IrrigationController = () => {
 
-    const [soilMoisture, setSoilMoisture] = useState(80);
+    const [soilMoisture, setSoilMoisture] = useState(0);
     const [pumping, setPumping] = useState(false);
     const soilMoistureMin = 30;
     const soilMoistureMax = 70;
@@ -25,19 +26,38 @@ const IrrigationController = () => {
     const warning = soilMoisture < soilMoistureMin || soilMoisture > soilMoistureMax;
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            sendGetRequest(APIs.pumpFeed, Strings.WATER_PUMP)
-                .then((data) => {
-                    setPumping(data.last_value == 1);
-                });
+        const client = new Paho.Client(
+            AIO_HOST, 
+            AIO_PORT, 
+            AIO_PATH, 
+            mqttClientID()
+        );
 
-            sendGetRequest(APIs.soilMoistureFeed, Strings.SOIL_MOISTURE)
-                .then((data) => {
-                    console.log(data.last_value);
-                    setSoilMoisture(parseInt(data.last_value));
-                });
-        }, Numbers.REFRESH_INTERVAL);
-        return () => clearInterval(interval);
+        client.connect({
+            onSuccess: () => {
+                console.log("Connected!");
+                client.subscribe(APIs.SOIL_MOISTURE);
+                client.subscribe(APIs.PUMP);
+            },
+            onFailure: (error) => {
+                console.log("Failed to connect!");
+                console.log(error.errorMessage);
+            },
+            userName: AIO_USERNAME,
+            password: AIO_KEY
+        })
+        client.onMessageArrived = (message) => {
+            console.log("Topic: " + message.destinationName);
+            console.log("Message: " + message.payloadString);
+
+            topic = message.destinationName;
+            data = message.payloadString;
+            if (topic === APIs.PUMP) {
+                setPumping(data == "1")
+            } else if (topic === APIs.SOIL_MOISTURE) {
+                setSoilMoisture(parseInt(data));
+            }
+        }
     }, []);
 
     return (

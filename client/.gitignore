@@ -35,3 +35,6 @@ yarn-error.*
 *.tsbuildinfo
 
 tests
+
+# Adafruit IO username and key
+config/account.js
