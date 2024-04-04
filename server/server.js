@@ -11,7 +11,7 @@ global.ada = MQTTClient.getClient();
 // const db = DatabaseClient.getClient();
 
 // Import routes
-const apiRouter = require("./routes/index");
+const requestApiRouter = require("./routes/index");
 const gatewayApiRouter = require("./routes/gateway");
 
 // App setup for request port
@@ -19,8 +19,7 @@ const requestApp = express();
 const requestPort = process.env.REQUEST_PORT || 8080;
 
 const corsOptions = {
-  origin: process.env.FRONTEND_URL,
-  credentials: true,
+  origin: process.env.FRONTEND_URL
 };
 
 requestApp.use(express.static("public"));
@@ -30,7 +29,7 @@ requestApp.use(cors(corsOptions));
 requestApp.use(bodyParser.json());
 
 // Every route should start with /api
-requestApp.use("/api", apiRouter);
+requestApp.use("/api", requestApiRouter);
 
 // Error handler for request port
 requestApp.use((err, req, res, next) => {
@@ -55,6 +54,8 @@ gatewayApp.use(express.json());
 gatewayApp.use(cors(corsOptions));
 gatewayApp.use(bodyParser.json());
 
+gatewayApp.use("/gatewayAppApi",gatewayApiRouter);
+
 gatewayApp.listen(gatewayPort, () => {
   console.log(`Gateway server running on port ${gatewayPort}`);
 
@@ -78,17 +79,17 @@ gatewayApp.listen(gatewayPort, () => {
   });
 
   ada.on("message", async (feed_name, valueLoad) => {
-    // const collection_name = await convertName(
-    //   feed_name.split("/").slice(-1)[0]
-    // );
-    // const timestamp = String(Date.now());
+    const collection_name = convertName(
+      feed_name.split("/").slice(-1)[0]
+    );
+    const timestamp = String(Date.now());
 
-    // db.collection(collection_name).insertOne({
-    //   timestamp: timestamp,
-    //   value: Number(valueLoad.toString()),
-    // });
+    db.collection(collection_name).insertOne({
+      timestamp: timestamp,
+      value: Number(valueLoad.toString()),
+    });
 
-    // console.log(`Insert ${valueLoad} from ${feed_name} to database.`);
+    console.log(`Insert ${valueLoad} from ${feed_name} to database.`);
 
 
     if (feed_name == "thanhduy/feeds/soil-moisture") {
@@ -99,4 +100,4 @@ gatewayApp.listen(gatewayPort, () => {
   });
 });
 
-gatewayApp.use("/gatewayAppApi",gatewayApiRouter);
+
