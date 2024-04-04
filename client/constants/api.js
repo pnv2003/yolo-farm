@@ -1,5 +1,6 @@
 // Adafruit HTTP APIs
 export const PUMP_FEED = 'thanhduy/feeds/pumb';
+export const PUMP_DATA = PUMP_FEED + '/data';
 export const SOIL_MOISTURE_FEED = 'thanhduy/feeds/soil-moisture';
 
 // Adafruit MQTT APIs

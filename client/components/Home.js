@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import * as Strings from "../constants/string";
 import * as Headers from "../constants/header";
 import * as Modes from "../constants/mode";
@@ -16,8 +16,9 @@ import { useNavigation } from "@react-navigation/core";
 import Paho from 'paho-mqtt';
 import { AIO_KEY, AIO_USERNAME } from "../config/account";
 import { AIO_HOST, AIO_PATH, AIO_PORT, mqttClientID } from "../config/connect";
+import { useFocusEffect } from "@react-navigation/native";
 import { sendGetRequest } from "../utils/request";
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+import * as mqtt from '../utils/mqtt';
 
 
 const GreenhouseController = () => {
@@ -33,43 +34,46 @@ const GreenhouseController = () => {
   const [temperature, setTemperature] = useState(362);
   const [temperatureMode, setTemperatureMode] = useState("MANUAL");
   
-  const client = new Paho.Client(
-    AIO_HOST, 
-    AIO_PORT, 
-    AIO_PATH, 
-    mqttClientID()
+  const client = mqtt.init();
+
+  useFocusEffect(
+    useCallback(() => {
+
+      mqtt.connect(client, [APIs.SOIL_MOISTURE_FEED]);
+      // client.connect({
+      //   onSuccess: () => {
+      //       console.log("Connected!");
+      //       client.subscribe(APIs.SOIL_MOISTURE);
+      //   },
+      //   onFailure: (error) => {
+      //       console.log("Failed to connect!");
+      //       console.log(error.errorMessage);
+      //   },
+      //   userName: AIO_USERNAME,
+      //   password: AIO_KEY
+      // })
+    
+      client.onMessageArrived = (message) => {
+        console.log("Topic: " + message.destinationName);
+        console.log("Message: " + message.payloadString);
+    
+        topic = message.destinationName;
+        data = message.payloadString;
+        if (topic === APIs.SOIL_MOISTURE) {
+            setIrrigationLevel(parseInt(data));
+        }
+      }
+
+      sendGetRequest('adafruit', APIs.SOIL_MOISTURE_FEED, Strings.SOIL_MOISTURE)
+        .then((data) => {
+            setIrrigationLevel(data.last_value);
+        });
+
+      return () => {
+        mqtt.disconnect(client);
+      }
+    }, [])
   );
-
-  client.connect({
-    onSuccess: () => {
-        console.log("Connected!");
-        client.subscribe(APIs.SOIL_MOISTURE);
-    },
-    onFailure: (error) => {
-        console.log("Failed to connect!");
-        console.log(error.errorMessage);
-    },
-    userName: AIO_USERNAME,
-    password: AIO_KEY
-  })
-
-  client.onMessageArrived = (message) => {
-    console.log("Topic: " + message.destinationName);
-    console.log("Message: " + message.payloadString);
-
-    topic = message.destinationName;
-    data = message.payloadString;
-    if (topic === APIs.SOIL_MOISTURE) {
-        setIrrigationLevel(parseInt(data));
-    }
-}
-
-useEffect(() => {
-  sendGetRequest('adafruit', APIs.SOIL_MOISTURE_FEED, Strings.SOIL_MOISTURE)
-      .then((data) => {
-          setIrrigationLevel(data.last_value);
-      });
-}, [])
 
   const toggleIrrigationMode = () => {
     setIrrigationMode(irrigationMode === "AUTOMATIC" ? "MANUAL" : "AUTOMATIC");

@@ -12,10 +12,8 @@ import SettingItem from "./SettingItem";
 import { Text } from "react-native-paper";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { MyTheme } from "../constants/theme";
-import Paho from 'paho-mqtt';
-import { AIO_KEY, AIO_USERNAME } from "../config/account";
-import { AIO_HOST, AIO_PATH, AIO_PORT, mqttClientID } from "../config/connect";
-import { sendGetRequest } from "../utils/request";
+import * as mqtt from "../utils/mqtt";
+import { sendGetRequest, sendRequest } from "../utils/request";
 import { useFocusEffect } from "@react-navigation/native";
 
 const IrrigationController = () => {
@@ -27,67 +25,81 @@ const IrrigationController = () => {
     const [mode, setMode] = useState(Modes.MANUAL);
     const warning = soilMoisture < minValue || soilMoisture > maxValue;
 
-    const client = new Paho.Client(
-        AIO_HOST, 
-        AIO_PORT, 
-        AIO_PATH, 
-        mqttClientID()
-    );
-
-    client.connect({
-        onSuccess: () => {
-            console.log("Connected!");
-            client.subscribe(APIs.SOIL_MOISTURE);
-            client.subscribe(APIs.PUMP);
-        },
-        onFailure: (error) => {
-            console.log("Failed to connect!");
-            console.log(error.errorMessage);
-        },
-        userName: AIO_USERNAME,
-        password: AIO_KEY
-    })
-    client.onMessageArrived = (message) => {
-        console.log("Topic: " + message.destinationName);
-        console.log("Message: " + message.payloadString);
-
-        topic = message.destinationName;
-        data = message.payloadString;
-        if (topic === APIs.PUMP) {
-            setPumping(data == "1")
-        } else if (topic === APIs.SOIL_MOISTURE) {
-            setSoilMoisture(parseInt(data));
-        }
-    }
+    const client = mqtt.init();
 
     useFocusEffect(
         useCallback(() => {
+
+            mqtt.connect(client, [APIs.SOIL_MOISTURE_FEED, APIs.PUMP_FEED]);
+            client.onMessageArrived = (message) => {
+                console.log("Topic: " + message.destinationName);
+                console.log("Message: " + message.payloadString);
+        
+                topic = message.destinationName;
+                data = message.payloadString;
+                if (topic === APIs.PUMP) {
+                    setPumping(data == "1")
+                } else if (topic === APIs.SOIL_MOISTURE) {
+                    setSoilMoisture(parseInt(data));
+                }
+            }
+
             sendGetRequest('adafruit', APIs.PUMP_FEED, Strings.WATER_PUMP)
             .then((data) => {
                 setPumping(data.last_value);
+
+                console.log("Got pump: " + data.last_value);
             });
 
             sendGetRequest('adafruit', APIs.SOIL_MOISTURE_FEED, Strings.SOIL_MOISTURE)
                 .then((data) => {
                     setSoilMoisture(data.last_value);
+
+                    console.log("Got moisture: " + data.last_value);
                 });
+        }, [])
+    );
+    
+    useFocusEffect(
+        useCallback(() => {
 
             sendGetRequest('server', APIs.PUMP_MODE, Strings.PUMP_MODE)
                 .then((data) => {
                     setMode(data.mode)
+
+                    console.log("Got mode: " + mode);
                 });
 
             sendGetRequest('server', APIs.SOIL_MOISTURE_RANGE, Strings.ALLOWED_RANGE)
                 .then((data) => {
                     setMinValue(data.minMoisture);
                     setMaxValue(data.maxMoisture);
+
+                    console.log("Got min: " + data.minMoisture);
+                    console.log("Got max: " + data.maxMoisture);
                 })
+
+            return () => {
+                mqtt.disconnect(client);
+            }
         }, [])
     );
-    // useEffect(() => {
 
-        
-    // }, [])
+    function onTogglePump() {
+        console.log("Toggled!");
+
+        sendRequest(
+            'adafruit', 
+            'POST', 
+            APIs.PUMP_DATA,
+            {
+                value: pumping ? '0' : '1'
+            },
+            Strings.WATER_PUMP
+        );
+
+        setPumping(!pumping);
+    }
 
     return (
         <View style={styles.container}>
@@ -95,13 +107,7 @@ const IrrigationController = () => {
                 <Text style={styles.header}>{Strings.DEVICE}</Text>
                 <DeviceToggler 
                     enabled={pumping} 
-                    onSwitch={() => {
-                        setPumping(prev => !prev);
-
-                        let msg = new Paho.Message(pumping ? 1 : 0);
-                        msg.destinationName = APIs.PUMP;
-                        client.send(msg);
-                    }}
+                    onSwitch={onTogglePump}
                     disabled={mode !== Modes.MANUAL}
                     color={MyTheme.blue}
                 />

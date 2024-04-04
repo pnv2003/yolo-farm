@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import * as Strings from '../constants/string';
 import * as Errors from '../constants/error';
 import * as APIs from '../constants/api';
@@ -6,28 +6,32 @@ import { StyleSheet, View } from "react-native";
 import { Button, HelperText, Text, TextInput } from "react-native-paper";
 import { MyTheme } from "../constants/theme";
 import { sendGetRequest, sendRequest } from "../utils/request";
+import { useFocusEffect } from "@react-navigation/native";
 
 const SoilMoistureRangeScreen = () => {
 
-    const [minValue, setMinValue] = useState("30");
-    const [maxValue, setMaxValue] = useState("70");
+    const [minValue, setMinValue] = useState("");
+    const [maxValue, setMaxValue] = useState("");
 
-    useEffect(() => {
-        sendGetRequest('server', APIs.SOIL_MOISTURE_RANGE, Strings.ALLOWED_RANGE)
-            .then((data) => {
-                setMinValue(data.minMoisture.toString());
-                setMaxValue(data.maxMoisture.toString());
+    useFocusEffect(
+        useCallback(() => {
+            sendGetRequest('server', APIs.SOIL_MOISTURE_RANGE, Strings.ALLOWED_RANGE)
+                .then((data) => {
+                    setMinValue(data.minMoisture.toString());
+                    setMaxValue(data.maxMoisture.toString());
 
-                console.log("Got min: " + data.minMoisture);
-                console.log("Got max: " + data.maxMoisture);
-            })
-    }, []);
+                    console.log("Got min: " + data.minMoisture);
+                    console.log("Got max: " + data.maxMoisture);
+                })
+        }, [])
+    );
 
     function handleSave() {
         console.log(minValue);
         console.log(maxValue);
 
         sendRequest(
+            'server',
             'PUT', 
             APIs.SOIL_MOISTURE_RANGE,
             {

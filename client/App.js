@@ -60,14 +60,14 @@ async function registerForPushNotificationAsync() {
   return token.data;
 }
 
-async function sendPushNotification(expoPushToken) {
+async function sendPushNotification(expoPushToken, title, body, data = {}) {
 
   const message = {
       to: expoPushToken,
       sound: 'default',
-      title: 'TURTLE',
-      body: 'badass',
-      data: { dat: 'dattebayo' }
+      title: title,
+      body: body,
+      data: data
   };
 
   await fetch('https://exp.host/--/api/v2/push/send', {
@@ -100,14 +100,6 @@ export default function App() {
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
       console.log(response);
     });
-
-    sendGetRequest(APIs.soilMoistureFeed, Strings.SOIL_MOISTURE)
-      .then((data) => {
-        if (data.last_value > 80) {
-          // console.log("notif sent!");
-          sendPushNotification(expoPushToken);
-        }
-      });
 
     return () => {
       Notifications.removeNotificationSubscription(notificationListener.current);
