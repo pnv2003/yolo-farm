@@ -7,5 +7,4 @@ export const SOIL_MOISTURE = 'thanhduy/feeds/soil-moisture';
 
 // Server HTTP APIs
 export const PUMP_MODE = 'watering/get-mode';
-export const MIN_SOIL_MOISTURE = 'watering/get-min-moisture';
-export const MAX_SOIL_MOISTURE = 'watering/get-max-moisture';
+export const SOIL_MOISTURE_RANGE = 'watering/min-max-moisture';
