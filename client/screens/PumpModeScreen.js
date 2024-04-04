@@ -7,7 +7,7 @@ import ModeItem from "../components/ModeItem";
 import { faBook, faCalendar, faWandMagicSparkles } from "@fortawesome/free-solid-svg-icons";
 import { Button, Dialog, Portal, Text } from "react-native-paper";
 import { MyTheme } from "../constants/theme";
-import { sendGetRequest } from "../utils/request";
+import { sendGetRequest, sendRequest } from "../utils/request";
 
 const PumpModeScreen = () => {
 
@@ -18,9 +18,16 @@ const PumpModeScreen = () => {
     useEffect(() => {
         sendGetRequest(APIs.PUMP_MODE, Strings.PUMP_MODE)
             .then((data) => {
-                setMode(data)
+                setMode(data.Mode);
             })
     }, []);
+
+    function onSelect(selectedMode) {
+        if (mode !== selectedMode) {
+            setPendingMode(selectedMode);
+            setConfirmVisible(true);
+        }
+    }
 
     return (
         <View style={{
@@ -33,12 +40,7 @@ const PumpModeScreen = () => {
                 icon={faWandMagicSparkles}
                 color={MyTheme.blue}
                 selected={mode === Modes.AUTO}
-                onPress={() => {
-                    if (mode !== Modes.AUTO) {
-                        setPendingMode(Modes.AUTO);
-                        setConfirmVisible(true);
-                    }
-                }}
+                onPress={() => onSelect(Modes.AUTO)}
             />
             <ModeItem
                 title={Strings.SCHEDULED}
@@ -46,12 +48,7 @@ const PumpModeScreen = () => {
                 icon={faCalendar}
                 color={MyTheme.green}
                 selected={mode === Modes.SCHED}
-                onPress={() => {
-                    if (mode !== Modes.SCHED) {
-                        setPendingMode(Modes.SCHED);
-                        setConfirmVisible(true);
-                    }
-                }}
+                onPress={() => onSelect(Modes.SCHED)}
             />
             <ModeItem
                 title={Strings.MANUAL}
@@ -59,12 +56,7 @@ const PumpModeScreen = () => {
                 icon={faBook}
                 color={MyTheme.orange}
                 selected={mode === Modes.MANUAL}
-                onPress={() => {
-                    if (mode !== Modes.MANUAL) {
-                        setPendingMode(Modes.MANUAL);
-                        setConfirmVisible(true);
-                    }
-                }}
+                onPress={() => onSelect(Modes.MANUAL)}
             />
             <Portal>
                 <Dialog visible={confirmVisible} onDismiss={() => setConfirmVisible(false)}>
@@ -75,6 +67,13 @@ const PumpModeScreen = () => {
                         <Button onPress={() => {
                             setMode(pendingMode);
                             setConfirmVisible(false);
+                            sendRequest(
+                                'PUT', 
+                                APIs.PUMP_MODE,
+                                {
+                                    mode: mode
+                                }
+                            );
                         }}
                         >
                             {Strings.CONFIRM}

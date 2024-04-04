@@ -60,7 +60,7 @@ const IrrigationController = () => {
     }
 
     useEffect(() => {
-        sendGetRequest('watering/get-mode', Strings.PUMP_MODE)
+        sendGetRequest('watering/mode', Strings.PUMP_MODE)
             .then((data) => {
                 setMode(data.Mode)
             });
