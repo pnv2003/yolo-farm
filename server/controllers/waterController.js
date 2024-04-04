@@ -25,23 +25,13 @@ async function setMode(req, res) {
   res.send("Successful");
 }
 
-async function getMinMoisture(req, res) {
+async function getMinMaxMoisture(req, res) {
   value = await water_model.get_min_moisture();
   res.json(value);
 }
 
-async function setMinMoisture(req, res) {
-  await water_model.set_min_moisture(req.query.minMoisture);
-  res.send("Successful");
-}
-
-async function getMaxMoisture(req, res) {
-  value = await water_model.get_max_moisture();
-  res.json(value);
-}
-
-async function setMaxMoisture(req, res) {
-  await water_model.set_max_moisture(req.query.maxMoisture);
+async function setMinMaxMoisture(req, res) {
+  await water_model.set_min_moisture(req.query.minMoisture,req.query.maxMoisture);
   res.send("Successful");
 }
 
@@ -50,8 +40,6 @@ module.exports = {
   setMoisture,
   getMode,
   setMode,
-  getMinMoisture,
-  setMinMoisture,
-  getMaxMoisture,
-  setMaxMoisture
+  getMinMaxMoisture,
+  setMinMaxMoisture
 };

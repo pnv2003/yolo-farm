@@ -11,13 +11,9 @@ router.get('/mode', waterController.getMode);
 
 router.post('/mode', waterController.setMode);
 
-router.get('/min-moisture', waterController.getMinMoisture);
+router.get('/min-max-moisture', waterController.getMinMaxMoisture);
 
-router.post('/min-moisture', waterController.setMinMoisture);
-
-router.get('/max-moisture', waterController.getMaxMoisture);
-
-router.post('/max-moisture', waterController.setMaxMoisture);
+router.post('/min-max-moisture', waterController.setMinMaxMoisture);
 
 
 module.exports = router;

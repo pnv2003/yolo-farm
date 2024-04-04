@@ -21,20 +21,13 @@ async function setMode(value) {
   mode = value;
 }
 
-async function get_min_moisture() {
-  return { minMoisture: min_moisture };
+async function get_minmax_moisture() {
+  return { minMoisture: min_moisture,maxMoisture: max_moisture };
 }
 
-async function set_min_moisture(value) {
-  min_moisture = value;
-}
-
-async function get_max_moisture() {
-  return { maxMoisture: max_moisture };
-}
-
-async function set_max_moisture(value) {
-  max_moisture = value;
+async function set_minmax_moisture(value1, value2) {
+  min_moisture = value1;
+  max_moisture = value2;
 }
 
 async function checkMoisture(value) {
@@ -71,9 +64,7 @@ module.exports = {
   setMoisture,
   getMode,
   setMode,
-  get_min_moisture,
-  set_min_moisture,
-  get_max_moisture,
-  set_max_moisture,
+  get_minmax_moisture,
+  set_minmax_moisture,
   checkMoisture,
 };

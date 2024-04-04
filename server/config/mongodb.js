@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 const MONGODB_URI =
   process.env.MONGODB_URI ||
-  "mongodb+srv://<username>:<password>@cluster0.krbalrf.mongodb.net/<database_name>?retryWrites=true&w=majority&appName=Cluster0";
+  "mongodb+srv://phuctran2703:Baophuc123@cluster0.krbalrf.mongodb.net/DADN-AI?retryWrites=true&w=majority&appName=Cluster0";
 
 class DatabaseClient{
   connection = null;
