@@ -22,7 +22,7 @@ async function setMode(value) {
 }
 
 async function get_minmax_moisture() {
-  return { minMoisture: min_moisture,maxMoisture: max_moisture };
+  return { minMoisture: min_moisture, maxMoisture: max_moisture };
 }
 
 async function set_minmax_moisture(value1, value2) {

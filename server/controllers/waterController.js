@@ -26,12 +26,12 @@ async function setMode(req, res) {
 }
 
 async function getMinMaxMoisture(req, res) {
-  value = await water_model.get_min_moisture();
+  value = await water_model.get_minmax_moisture();
   res.json(value);
 }
 
 async function setMinMaxMoisture(req, res) {
-  await water_model.set_min_moisture(req.query.minMoisture,req.query.maxMoisture);
+  await water_model.set_minmax_moisture(req.query.minMoisture,req.query.maxMoisture);
   res.send("Successful");
 }
 
