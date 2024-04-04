@@ -1,5 +1,10 @@
-const SERVER_HOST = 'http://192.168.237.192:8080/api/';
+import Constants from 'expo-constants';
+import { AIO_KEY } from '../config/account';
+
 const ADAFRUIT_HOST = 'https://io.adafruit.com/api/v2/';
+const SERVER_HOST = Constants?.expoConfig?.hostUri
+    ? 'http://' + Constants.expoConfig.hostUri.split(':').shift().concat(':8080') + '/api/'
+    : 'myapi.com';
 
 export async function sendGetRequest(host, path, errorMessage) {
     try {
@@ -8,7 +13,8 @@ export async function sendGetRequest(host, path, errorMessage) {
         } else if (host == "adafruit") {
             host = ADAFRUIT_HOST;
         } else {
-            window.alert("Invalid host: " + host)
+            window.alert("Invalid host: " + host);
+            return undefined;
         }
 
         const response = await fetch(host + path, {
@@ -30,9 +36,17 @@ export async function sendGetRequest(host, path, errorMessage) {
     }
 }
 
-export async function sendRequest(method, path, data, errorMessage) {
+export async function sendRequest(host, method, path, data, errorMessage) {
     try {
-        host = SERVER_HOST;
+        if (host == "server") {
+            host = SERVER_HOST;
+        } else if (host == "adafruit") {
+            host = ADAFRUIT_HOST;
+            path += "?x-aio-key=" + AIO_KEY;
+        } else {
+            window.alert("Invalid host: " + host)
+        }
+
         const response = await fetch (host + path, {
             method: method,
             headers: {
