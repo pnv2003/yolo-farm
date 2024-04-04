@@ -35,4 +35,3 @@ yarn-error.*
 *.tsbuildinfo
 
 .env
-client/config/account.js
