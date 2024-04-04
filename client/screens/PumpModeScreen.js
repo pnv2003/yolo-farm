@@ -1,17 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as Strings from "./../constants/string";
 import * as Modes from "./../constants/mode";
+import * as APIs from "./../constants/api";
 import { View } from "react-native";
 import ModeItem from "../components/ModeItem";
 import { faBook, faCalendar, faWandMagicSparkles } from "@fortawesome/free-solid-svg-icons";
 import { Button, Dialog, Portal, Text } from "react-native-paper";
 import { MyTheme } from "../constants/theme";
+import { sendGetRequest } from "../utils/request";
 
 const PumpModeScreen = () => {
 
     const [mode, setMode] = useState(Modes.AUTO);
     const [pendingMode, setPendingMode] = useState(Modes.AUTO);
     const [confirmVisible, setConfirmVisible] = useState(false);
+
+    useEffect(() => {
+        sendGetRequest(APIs.PUMP_MODE, Strings.PUMP_MODE)
+            .then((data) => {
+                setMode(data)
+            })
+    }, []);
 
     return (
         <View style={{

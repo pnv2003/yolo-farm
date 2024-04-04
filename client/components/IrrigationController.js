@@ -15,6 +15,7 @@ import { MyTheme } from "../constants/theme";
 import Paho from 'paho-mqtt';
 import { AIO_KEY, AIO_USERNAME } from "../config/account";
 import { AIO_HOST, AIO_PATH, AIO_PORT, mqttClientID } from "../config/connect";
+import { sendGetRequest } from "../utils/request";
 
 const IrrigationController = () => {
 
@@ -22,7 +23,7 @@ const IrrigationController = () => {
     const [pumping, setPumping] = useState(false);
     const soilMoistureMin = 30;
     const soilMoistureMax = 70;
-    const mode = Modes.MANUAL;
+    const [mode, setMode] = useState(Modes.MANUAL);
     const warning = soilMoisture < soilMoistureMin || soilMoisture > soilMoistureMax;
 
     const client = new Paho.Client(
@@ -57,6 +58,13 @@ const IrrigationController = () => {
             setSoilMoisture(parseInt(data));
         }
     }
+
+    useEffect(() => {
+        sendGetRequest('watering/get-mode', Strings.PUMP_MODE)
+            .then((data) => {
+                setMode(data.Mode)
+            });
+    }, [])
 
     return (
         <View style={styles.container}>
