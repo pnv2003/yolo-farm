@@ -4,11 +4,12 @@ var mode = "automatic"; //Automatic or Manual or Schedule
 var soil_moisture = 0; // cần lấy giá trị mới nhất trong database
 var min_moisture = 40;
 var max_moisture = 60;
+var pump = 0;
+var intervalId = null;
 var period = {
   start: new Date().toLocaleTimeString(),
-  end: new Date("2024-04-04T15:19:00").toLocaleTimeString(),
+  end: new Date().toLocaleTimeString(),
 };
-var pump = 0;
 
 async function getMoisture() {
   return { soilMoisture: soil_moisture };
@@ -36,20 +37,29 @@ async function set_minmax_moisture(value1, value2) {
 }
 
 async function schedule_mode(start, end) {
-  period.start = start;
-  period.end = end;
-  var intervalId = setInterval(() => {
+  period.start = new Date(start).toLocaleTimeString();
+  period.end = new Date(end).toLocaleTimeString();
+  clearInterval(intervalId);
+  intervalId = setInterval(() => {
     if (mode == "schedule") {
-      const now = new Date().toLocaleTimeString();
-      if (pump == 0 && period.start <= now && now <= period.end) {
+      var now = new Date().toLocaleTimeString();
+      if (pump == 0 && intime(period.start, period.end, now)) {
         act_pump();
-      } else if (pump == 1 && (period.start > now || now > period.end)) {
+      } else if (pump == 1 && !intime(period.start, period.end, now)) {
         inact_pump();
       }
     } else {
       clearInterval(intervalId);
     }
   }, 1000);
+}
+
+function intime(start, end, now) {
+  var top = new Date(new Date().toISOString().slice(0, 10) + " " + start);
+  var down = new Date(new Date().toISOString().slice(0, 10) + " " + end);
+  var innow = new Date(new Date().toISOString().slice(0, 10) + " " + now);
+  if (top <= innow && innow <= down) return 1;
+  return 0;
 }
 
 async function checkMoisture(value) {
