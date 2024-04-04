@@ -13,10 +13,13 @@ const SoilMoistureRangeScreen = () => {
     const [maxValue, setMaxValue] = useState("70");
 
     useEffect(() => {
-        sendGetRequest(APIs.SOIL_MOISTURE_RANGE, Strings.ALLOWED_RANGE)
+        sendGetRequest('server', APIs.SOIL_MOISTURE_RANGE, Strings.ALLOWED_RANGE)
             .then((data) => {
-                setMinValue(data.minMoisture);
-                setMaxValue(data.maxMoisture);
+                setMinValue(data.minMoisture.toString());
+                setMaxValue(data.maxMoisture.toString());
+
+                console.log("Got min: " + data.minMoisture);
+                console.log("Got max: " + data.maxMoisture);
             })
     }, []);
 
@@ -28,9 +31,10 @@ const SoilMoistureRangeScreen = () => {
             'PUT', 
             APIs.SOIL_MOISTURE_RANGE,
             {
-                minMoisture: minValue,
-                maxMoisture: maxValue
-            }
+                minMoisture: parseInt(minValue),
+                maxMoisture: parseInt(maxValue)
+            },
+            Strings.ALLOWED_RANGE
         );
     }
 
@@ -44,7 +48,7 @@ const SoilMoistureRangeScreen = () => {
                     label={"Min"}
                     keyboardType="numeric"
                     value={minValue}
-                    onChangeText={(text) => setMinValue(parseInt(text))}
+                    onChangeText={(text) => setMinValue(text)}
                     maxLength={3}
                 />
                 <HelperText 

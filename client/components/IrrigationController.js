@@ -60,9 +60,20 @@ const IrrigationController = () => {
     }
 
     useEffect(() => {
-        sendGetRequest('watering/mode', Strings.PUMP_MODE)
+
+        sendGetRequest('adafruit', APIs.PUMP_FEED, Strings.WATER_PUMP)
             .then((data) => {
-                setMode(data.Mode)
+                setPumping(data.last_value);
+            });
+
+        sendGetRequest('adafruit', APIs.SOIL_MOISTURE_FEED, Strings.SOIL_MOISTURE)
+            .then((data) => {
+                setSoilMoisture(data.last_value);
+            });
+
+        sendGetRequest('server', APIs.PUMP_MODE, Strings.PUMP_MODE)
+            .then((data) => {
+                setMode(data.mode)
             });
     }, [])
 

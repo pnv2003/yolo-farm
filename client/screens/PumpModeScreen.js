@@ -16,9 +16,10 @@ const PumpModeScreen = () => {
     const [confirmVisible, setConfirmVisible] = useState(false);
 
     useEffect(() => {
-        sendGetRequest(APIs.PUMP_MODE, Strings.PUMP_MODE)
+        sendGetRequest('server', APIs.PUMP_MODE, Strings.PUMP_MODE)
             .then((data) => {
-                setMode(data.Mode);
+                setMode(data.mode);
+                console.log("Got mode: " + data.mode);
             })
     }, []);
 
@@ -67,12 +68,15 @@ const PumpModeScreen = () => {
                         <Button onPress={() => {
                             setMode(pendingMode);
                             setConfirmVisible(false);
+
+                            console.log("Send: " + pendingMode);
                             sendRequest(
                                 'PUT', 
                                 APIs.PUMP_MODE,
                                 {
-                                    mode: mode
-                                }
+                                    mode: pendingMode
+                                },
+                                Strings.MODE
                             );
                         }}
                         >
