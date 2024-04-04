@@ -1,4 +1,4 @@
-const host = '';
+const host = 'http://localhost:8080/api';
 
 export async function sendGetRequest(path, errorMessage) {
     try {
