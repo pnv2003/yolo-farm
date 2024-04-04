@@ -7,8 +7,8 @@ const { convertName } = require("./config/utils");
 
 const MQTTClient = require("./config/adafruit");
 global.ada = MQTTClient.getClient();
-// const DatabaseClient = require("./config/mongodb");
-// const db = DatabaseClient.getClient();
+const DatabaseClient = require("./config/mongodb");
+const db = DatabaseClient.getClient();
 
 // Import routes
 const requestApiRouter = require("./routes/index");
@@ -78,6 +78,8 @@ gatewayApp.listen(gatewayPort, () => {
     });
   });
 
+  
+
   ada.on("message", async (feed_name, valueLoad) => {
     const collection_name = convertName(
       feed_name.split("/").slice(-1)[0]
@@ -93,7 +95,7 @@ gatewayApp.listen(gatewayPort, () => {
 
 
     if (feed_name == "thanhduy/feeds/soil-moisture") {
-      axios.put("http://localhost:8080/api/watering/post-moisture", {
+      axios.put("http://localhost:8080/api/watering/moisture", {
         moisture: valueLoad.toString(),
       });
     }
