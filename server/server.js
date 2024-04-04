@@ -93,7 +93,7 @@ gatewayApp.listen(gatewayPort, () => {
 
 
     if (feed_name == "thanhduy/feeds/soil-moisture") {
-      axios.post("http://localhost:8080/api/watering/post-moisture", {
+      axios.put("http://localhost:8080/api/watering/post-moisture", {
         moisture: valueLoad.toString(),
       });
     }
