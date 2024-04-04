@@ -2,7 +2,7 @@ const express = require("express");
 
 const router = express.Router();
 
-router.post("/pumb", (req, res) => {
+router.put("/pumb", (req, res) => {
   if (req.body.pumb == 1) {
     ada.publish(
       process.env.PUMP_SENSOR,

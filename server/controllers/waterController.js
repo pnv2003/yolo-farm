@@ -21,7 +21,9 @@ async function getMode(req, res) {
 }
 
 async function setMode(req, res) {
-  await water_model.setMode(req.query.mode);
+  await water_model.setMode(req.body.mode);
+  if (req.body.mode == "schedule")
+    water_model.schedule_mode(req.body.start, req.body.end);
   res.send("Successful");
 }
 
@@ -31,7 +33,10 @@ async function getMinMaxMoisture(req, res) {
 }
 
 async function setMinMaxMoisture(req, res) {
-  await water_model.set_minmax_moisture(req.query.minMoisture,req.query.maxMoisture);
+  await water_model.set_minmax_moisture(
+    req.body.minMoisture,
+    req.body.maxMoisture
+  );
   res.send("Successful");
 }
 
@@ -41,5 +46,5 @@ module.exports = {
   getMode,
   setMode,
   getMinMaxMoisture,
-  setMinMaxMoisture
+  setMinMaxMoisture,
 };
