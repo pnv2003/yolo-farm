@@ -1,15 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import * as Strings from "../constants/string";
 import * as Headers from "../constants/header";
+import * as Modes from "../constants/mode";
+import * as APIs from "../constants/api";
 import {
   View,
   Text,
   StyleSheet,
   FlatList,
-  Dimensions
+  Dimensions,
+  TouchableOpacity
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons"; 
 import { useNavigation } from "@react-navigation/core";
-import { TouchableOpacity } from "react-native";
+import Paho from 'paho-mqtt';
+import { AIO_KEY, AIO_USERNAME } from "../config/account";
+import { AIO_HOST, AIO_PATH, AIO_PORT, mqttClientID } from "../config/connect";
+import { sendGetRequest } from "../utils/request";
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 
 const GreenhouseController = () => {
@@ -18,12 +26,50 @@ const GreenhouseController = () => {
   const navigation = useNavigation();
 
   const [irrigationMode, setIrrigationMode] = useState("AUTOMATIC");
-  const [irrigationLevel, setIrrigationLevel] = useState(120);
+  const [irrigationLevel, setIrrigationLevel] = useState(12);
   const [lightingMode, setLightingMode] = useState("AUTOMATIC");
   const [lightingPower, setLightingPower] = useState(4820);
   const [lightingIntensity, setLightingIntensity] = useState(617);
   const [temperature, setTemperature] = useState(362);
   const [temperatureMode, setTemperatureMode] = useState("MANUAL");
+  
+  const client = new Paho.Client(
+    AIO_HOST, 
+    AIO_PORT, 
+    AIO_PATH, 
+    mqttClientID()
+  );
+
+  client.connect({
+    onSuccess: () => {
+        console.log("Connected!");
+        client.subscribe(APIs.SOIL_MOISTURE);
+    },
+    onFailure: (error) => {
+        console.log("Failed to connect!");
+        console.log(error.errorMessage);
+    },
+    userName: AIO_USERNAME,
+    password: AIO_KEY
+  })
+
+  client.onMessageArrived = (message) => {
+    console.log("Topic: " + message.destinationName);
+    console.log("Message: " + message.payloadString);
+
+    topic = message.destinationName;
+    data = message.payloadString;
+    if (topic === APIs.SOIL_MOISTURE) {
+        setIrrigationLevel(parseInt(data));
+    }
+}
+
+useEffect(() => {
+  sendGetRequest('adafruit', APIs.SOIL_MOISTURE_FEED, Strings.SOIL_MOISTURE)
+      .then((data) => {
+          setIrrigationLevel(data.last_value);
+      });
+}, [])
 
   const toggleIrrigationMode = () => {
     setIrrigationMode(irrigationMode === "AUTOMATIC" ? "MANUAL" : "AUTOMATIC");
