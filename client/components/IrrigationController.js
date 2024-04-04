@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import * as Strings from "../constants/string";
 import * as Headers from "../constants/header";
 import * as Modes from "../constants/mode";
@@ -16,15 +16,16 @@ import Paho from 'paho-mqtt';
 import { AIO_KEY, AIO_USERNAME } from "../config/account";
 import { AIO_HOST, AIO_PATH, AIO_PORT, mqttClientID } from "../config/connect";
 import { sendGetRequest } from "../utils/request";
+import { useFocusEffect } from "@react-navigation/native";
 
 const IrrigationController = () => {
 
     const [soilMoisture, setSoilMoisture] = useState(0);
     const [pumping, setPumping] = useState(false);
-    const soilMoistureMin = 30;
-    const soilMoistureMax = 70;
+    const [minValue, setMinValue] = useState(null);
+    const [maxValue, setMaxValue] = useState(null);
     const [mode, setMode] = useState(Modes.MANUAL);
-    const warning = soilMoisture < soilMoistureMin || soilMoisture > soilMoistureMax;
+    const warning = soilMoisture < minValue || soilMoisture > maxValue;
 
     const client = new Paho.Client(
         AIO_HOST, 
@@ -59,23 +60,34 @@ const IrrigationController = () => {
         }
     }
 
-    useEffect(() => {
-
-        sendGetRequest('adafruit', APIs.PUMP_FEED, Strings.WATER_PUMP)
+    useFocusEffect(
+        useCallback(() => {
+            sendGetRequest('adafruit', APIs.PUMP_FEED, Strings.WATER_PUMP)
             .then((data) => {
                 setPumping(data.last_value);
             });
 
-        sendGetRequest('adafruit', APIs.SOIL_MOISTURE_FEED, Strings.SOIL_MOISTURE)
-            .then((data) => {
-                setSoilMoisture(data.last_value);
-            });
+            sendGetRequest('adafruit', APIs.SOIL_MOISTURE_FEED, Strings.SOIL_MOISTURE)
+                .then((data) => {
+                    setSoilMoisture(data.last_value);
+                });
 
-        sendGetRequest('server', APIs.PUMP_MODE, Strings.PUMP_MODE)
-            .then((data) => {
-                setMode(data.mode)
-            });
-    }, [])
+            sendGetRequest('server', APIs.PUMP_MODE, Strings.PUMP_MODE)
+                .then((data) => {
+                    setMode(data.mode)
+                });
+
+            sendGetRequest('server', APIs.SOIL_MOISTURE_RANGE, Strings.ALLOWED_RANGE)
+                .then((data) => {
+                    setMinValue(data.minMoisture);
+                    setMaxValue(data.maxMoisture);
+                })
+        }, [])
+    );
+    // useEffect(() => {
+
+        
+    // }, [])
 
     return (
         <View style={styles.container}>
@@ -159,7 +171,7 @@ const IrrigationController = () => {
                         primColor={MyTheme.blue}
                         bgColor={MyTheme.lightblue}
                     >
-                        <Text>{soilMoistureMin}-{soilMoistureMax}%</Text>
+                        <Text>{minValue}-{maxValue}%</Text>
                     </SettingItem>
                 </View>
             </View>

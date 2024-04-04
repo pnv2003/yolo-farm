@@ -32,6 +32,7 @@ export async function sendGetRequest(host, path, errorMessage) {
 
 export async function sendRequest(method, path, data, errorMessage) {
     try {
+        host = SERVER_HOST;
         const response = await fetch (host + path, {
             method: method,
             headers: {
