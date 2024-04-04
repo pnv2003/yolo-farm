@@ -34,7 +34,4 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
-tests
-
-# Adafruit IO username and key
-config/account.js
+.env
