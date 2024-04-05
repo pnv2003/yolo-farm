@@ -7,7 +7,7 @@ export function init() {
         AIO_HOST,
         AIO_PORT,
         AIO_PATH,
-        mqttClientID()
+        "test_id"
     );
 }
 
