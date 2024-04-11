@@ -17,8 +17,8 @@ import Paho from 'paho-mqtt';
 import { AIO_KEY, AIO_USERNAME } from "../config/account";
 import { AIO_HOST, AIO_PATH, AIO_PORT, mqttClientID } from "../config/connect";
 import { useFocusEffect } from "@react-navigation/native";
-import { sendGetRequest } from "../utils/request";
 import * as mqtt from '../utils/mqtt';
+import * as http from '../utils/http';
 
 
 const GreenhouseController = () => {
@@ -64,7 +64,7 @@ const GreenhouseController = () => {
         }
       }
 
-      sendGetRequest('adafruit', APIs.SOIL_MOISTURE_FEED, Strings.SOIL_MOISTURE)
+      http.get('adafruit', APIs.SOIL_MOISTURE_FEED, Strings.SOIL_MOISTURE)
         .then((data) => {
             setIrrigationLevel(data.last_value);
         });

@@ -5,7 +5,7 @@ import * as APIs from '../constants/api';
 import { StyleSheet, View } from "react-native";
 import { Button, HelperText, Text, TextInput } from "react-native-paper";
 import { MyTheme } from "../constants/theme";
-import { sendGetRequest, sendRequest } from "../utils/request";
+import * as http from "../utils/http";
 import { useFocusEffect } from "@react-navigation/native";
 
 const SoilMoistureRangeScreen = () => {
@@ -15,7 +15,7 @@ const SoilMoistureRangeScreen = () => {
 
     useFocusEffect(
         useCallback(() => {
-            sendGetRequest('server', APIs.SOIL_MOISTURE_RANGE, Strings.ALLOWED_RANGE)
+            http.get('server', APIs.SOIL_MOISTURE_RANGE, Strings.ALLOWED_RANGE)
                 .then((data) => {
                     setMinValue(data.minMoisture.toString());
                     setMaxValue(data.maxMoisture.toString());
@@ -30,7 +30,7 @@ const SoilMoistureRangeScreen = () => {
         console.log(minValue);
         console.log(maxValue);
 
-        sendRequest(
+        http.request(
             'server',
             'PUT', 
             APIs.SOIL_MOISTURE_RANGE,

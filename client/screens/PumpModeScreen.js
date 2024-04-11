@@ -7,7 +7,7 @@ import ModeItem from "../components/ModeItem";
 import { faBook, faCalendar, faWandMagicSparkles } from "@fortawesome/free-solid-svg-icons";
 import { Button, Dialog, Portal, Text } from "react-native-paper";
 import { MyTheme } from "../constants/theme";
-import { sendGetRequest, sendRequest } from "../utils/request";
+import * as http from "../utils/http";
 import { useFocusEffect } from "@react-navigation/native";
 
 const PumpModeScreen = () => {
@@ -18,7 +18,7 @@ const PumpModeScreen = () => {
 
     useFocusEffect(
         useCallback(() => {
-            sendGetRequest('server', APIs.PUMP_MODE, Strings.PUMP_MODE)
+            http.get('server', APIs.PUMP_MODE, Strings.PUMP_MODE)
                 .then((data) => {
                     setMode(data.mode);
                     console.log("Got mode: " + data.mode);
@@ -38,7 +38,7 @@ const PumpModeScreen = () => {
         setConfirmVisible(false);
 
         console.log("Send: " + pendingMode);
-        sendRequest(
+        http.request(
             'server',
             'PUT', 
             APIs.PUMP_MODE,

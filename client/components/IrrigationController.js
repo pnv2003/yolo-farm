@@ -13,7 +13,7 @@ import { Text } from "react-native-paper";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { MyTheme } from "../constants/theme";
 import * as mqtt from "../utils/mqtt";
-import { sendGetRequest, sendRequest } from "../utils/request";
+import * as http from "../utils/http";
 import { useFocusEffect } from "@react-navigation/native";
 
 const IrrigationController = () => {
@@ -44,14 +44,14 @@ const IrrigationController = () => {
                 }
             }
 
-            sendGetRequest('adafruit', APIs.PUMP_FEED, Strings.WATER_PUMP)
+            http.get('adafruit', APIs.PUMP_FEED, Strings.WATER_PUMP)
             .then((data) => {
                 setPumping(data.last_value);
 
                 console.log("Got pump: " + data.last_value);
             });
 
-            sendGetRequest('adafruit', APIs.SOIL_MOISTURE_FEED, Strings.SOIL_MOISTURE)
+            http.get('adafruit', APIs.SOIL_MOISTURE_FEED, Strings.SOIL_MOISTURE)
                 .then((data) => {
                     setSoilMoisture(data.last_value);
 
@@ -63,14 +63,14 @@ const IrrigationController = () => {
     useFocusEffect(
         useCallback(() => {
 
-            sendGetRequest('server', APIs.PUMP_MODE, Strings.PUMP_MODE)
+            http.get('server', APIs.PUMP_MODE, Strings.PUMP_MODE)
                 .then((data) => {
                     setMode(data.mode)
 
                     console.log("Got mode: " + mode);
                 });
 
-            sendGetRequest('server', APIs.SOIL_MOISTURE_RANGE, Strings.ALLOWED_RANGE)
+            http.get('server', APIs.SOIL_MOISTURE_RANGE, Strings.ALLOWED_RANGE)
                 .then((data) => {
                     setMinValue(data.minMoisture);
                     setMaxValue(data.maxMoisture);
@@ -88,7 +88,7 @@ const IrrigationController = () => {
     function onTogglePump() {
         console.log("Toggled!");
 
-        sendRequest(
+        http.request(
             'adafruit', 
             'POST', 
             APIs.PUMP_DATA,

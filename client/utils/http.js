@@ -6,7 +6,7 @@ const SERVER_HOST = Constants?.expoConfig?.hostUri
     ? 'http://' + Constants.expoConfig.hostUri.split(':').shift().concat(':8080') + '/api/'
     : 'myapi.com';
 
-export async function sendGetRequest(host, path, errorMessage) {
+export async function get(host, path, errorMessage) {
     try {
         if (host == "server") {
             host = SERVER_HOST;
@@ -36,7 +36,7 @@ export async function sendGetRequest(host, path, errorMessage) {
     }
 }
 
-export async function sendRequest(host, method, path, data, errorMessage) {
+export async function request(host, method, path, data, errorMessage) {
     try {
         if (host == "server") {
             host = SERVER_HOST;
