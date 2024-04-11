@@ -3,12 +3,24 @@ import { AIO_HOST, AIO_PATH, AIO_PORT, mqttClientID } from '../config/connect';
 import { AIO_KEY, AIO_USERNAME } from '../config/account';
 
 export function init() {
-    return new Paho.Client(
+    let client = new Paho.Client(
         AIO_HOST,
         AIO_PORT,
         AIO_PATH,
         "test_id"
     );
+
+    client.onMessageArrived = (message) => {
+        console.log("MQTT message arrived: " + message.payloadString);
+    }
+
+    client.onConnectionLost = (error) => {
+        if (error.errorCode !== 0) {
+            console.log("MQTT connection lost: " + error.errorMessage);
+        }
+    };
+
+    return client;
 }
 
 export function connect(client, feeds) {
