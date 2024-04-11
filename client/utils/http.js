@@ -6,7 +6,7 @@ const SERVER_HOST = Constants?.expoConfig?.hostUri
     ? 'http://' + Constants.expoConfig.hostUri.split(':').shift().concat(':8080') + '/api/'
     : 'myapi.com';
 
-export async function get(host, path, errorMessage) {
+export async function get(host, path) {
     try {
         if (host == "server") {
             host = SERVER_HOST;
@@ -27,16 +27,15 @@ export async function get(host, path, errorMessage) {
         if (response.ok) {
             const json = await response.json();
             return json;
-        } 
+        }
         
-        window.alert('GET Request failed: ' + errorMessage);
-        return undefined;
+        return response.text().then(text => { throw new Error(text); });
     } catch (error) {
-        console.error('Cannot send GET request:' + error);
+        console.error('HTTP GET Failed:' + error);
     }
 }
 
-export async function request(host, method, path, data, errorMessage) {
+export async function request(host, method, path, data) {
     try {
         if (host == "server") {
             host = SERVER_HOST;
@@ -61,9 +60,8 @@ export async function request(host, method, path, data, errorMessage) {
             return json;
         } 
         
-        window.alert( method + ' request failed: ' + errorMessage);
-        return undefined;
+        return response.text().then(text => { throw new Error(text); });
     } catch(error) {
-        console.error('Cannot send ' + method + ' request: ' + error);
+        console.error('HTTP ' + method + ' Failed: ' + error);
     }
 }

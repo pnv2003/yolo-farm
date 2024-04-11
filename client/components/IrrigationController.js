@@ -44,14 +44,14 @@ const IrrigationController = () => {
                 }
             }
 
-            http.get('adafruit', APIs.PUMP_FEED, Strings.WATER_PUMP)
+            http.get('adafruit', APIs.PUMP_FEED)
             .then((data) => {
                 setPumping(data.last_value);
 
                 console.log("Got pump: " + data.last_value);
             });
 
-            http.get('adafruit', APIs.SOIL_MOISTURE_FEED, Strings.SOIL_MOISTURE)
+            http.get('adafruit', APIs.SOIL_MOISTURE_FEED)
                 .then((data) => {
                     setSoilMoisture(data.last_value);
 
@@ -63,14 +63,14 @@ const IrrigationController = () => {
     useFocusEffect(
         useCallback(() => {
 
-            http.get('server', APIs.PUMP_MODE, Strings.PUMP_MODE)
+            http.get('server', APIs.PUMP_MODE)
                 .then((data) => {
                     setMode(data.mode)
 
                     console.log("Got mode: " + mode);
                 });
 
-            http.get('server', APIs.SOIL_MOISTURE_RANGE, Strings.ALLOWED_RANGE)
+            http.get('server', APIs.SOIL_MOISTURE_RANGE)
                 .then((data) => {
                     setMinValue(data.minMoisture);
                     setMaxValue(data.maxMoisture);
@@ -94,8 +94,7 @@ const IrrigationController = () => {
             APIs.PUMP_DATA,
             {
                 value: pumping ? '0' : '1'
-            },
-            Strings.WATER_PUMP
+            }
         );
 
         setPumping(!pumping);

@@ -64,7 +64,7 @@ const GreenhouseController = () => {
         }
       }
 
-      http.get('adafruit', APIs.SOIL_MOISTURE_FEED, Strings.SOIL_MOISTURE)
+      http.get('adafruit', APIs.SOIL_MOISTURE_FEED)
         .then((data) => {
             setIrrigationLevel(data.last_value);
         });

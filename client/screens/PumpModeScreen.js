@@ -18,7 +18,7 @@ const PumpModeScreen = () => {
 
     useFocusEffect(
         useCallback(() => {
-            http.get('server', APIs.PUMP_MODE, Strings.PUMP_MODE)
+            http.get('server', APIs.PUMP_MODE)
                 .then((data) => {
                     setMode(data.mode);
                     console.log("Got mode: " + data.mode);
@@ -44,8 +44,7 @@ const PumpModeScreen = () => {
             APIs.PUMP_MODE,
             {
                 mode: pendingMode
-            },
-            Strings.MODE
+            }
         );
     }
 

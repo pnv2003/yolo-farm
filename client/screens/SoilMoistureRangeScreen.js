@@ -15,7 +15,7 @@ const SoilMoistureRangeScreen = () => {
 
     useFocusEffect(
         useCallback(() => {
-            http.get('server', APIs.SOIL_MOISTURE_RANGE, Strings.ALLOWED_RANGE)
+            http.get('server', APIs.SOIL_MOISTURE_RANGE)
                 .then((data) => {
                     setMinValue(data.minMoisture.toString());
                     setMaxValue(data.maxMoisture.toString());
@@ -37,8 +37,7 @@ const SoilMoistureRangeScreen = () => {
             {
                 minMoisture: parseInt(minValue),
                 maxMoisture: parseInt(maxValue)
-            },
-            Strings.ALLOWED_RANGE
+            }
         );
     }
 
