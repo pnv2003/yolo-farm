@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import * as Strings from "../constants/string";
 import * as Headers from "../constants/header";
 import * as Modes from "../constants/mode";

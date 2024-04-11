@@ -1,12 +1,9 @@
-import { StatusBar } from 'expo-status-bar';
 import { Platform, StyleSheet } from 'react-native';
 import { PaperProvider } from 'react-native-paper';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import IrrigationScreen from './screens/IrrigationScreen';
-import * as Strings from './constants/string';
 import * as Headers from './constants/header';
-import * as APIs from "./constants/api";
 import PumpModeScreen from './screens/PumpModeScreen';
 import SoilMoistureRangeScreen from './screens/SoilMoistureRangeScreen';
 import NavigationBar from './components/NavigationBar';
@@ -15,7 +12,6 @@ import * as Notifications from "expo-notifications";
 import * as Device from 'expo-device';
 import Constants from 'expo-constants';
 import { useEffect, useRef, useState } from 'react';
-import { sendGetRequest } from './utils/request';
 
 Notifications.setNotificationHandler({
     handleNotification: async () => ({

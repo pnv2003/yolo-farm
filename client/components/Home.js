@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import * as Strings from "../constants/string";
 import * as Headers from "../constants/header";
-import * as Modes from "../constants/mode";
 import * as APIs from "../constants/api";
 import {
   View,
@@ -13,9 +11,6 @@ import {
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons"; 
 import { useNavigation } from "@react-navigation/core";
-import Paho from 'paho-mqtt';
-import { AIO_KEY, AIO_USERNAME } from "../config/account";
-import { AIO_HOST, AIO_PATH, AIO_PORT, mqttClientID } from "../config/connect";
 import { useFocusEffect } from "@react-navigation/native";
 import * as mqtt from '../utils/mqtt';
 import * as http from '../utils/http';
