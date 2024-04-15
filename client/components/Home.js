@@ -29,24 +29,11 @@ const GreenhouseController = () => {
   const [temperature, setTemperature] = useState(362);
   const [temperatureMode, setTemperatureMode] = useState("MANUAL");
   
-  const client = mqtt.init();
-
   useFocusEffect(
     useCallback(() => {
 
+      const client = mqtt.init();
       mqtt.connect(client, [APIs.SOIL_MOISTURE_FEED]);
-      // client.connect({
-      //   onSuccess: () => {
-      //       console.log("Connected!");
-      //       client.subscribe(APIs.SOIL_MOISTURE);
-      //   },
-      //   onFailure: (error) => {
-      //       console.log("Failed to connect!");
-      //       console.log(error.errorMessage);
-      //   },
-      //   userName: AIO_USERNAME,
-      //   password: AIO_KEY
-      // })
     
       client.onMessageArrived = (message) => {
         console.log("Topic: " + message.destinationName);
@@ -65,7 +52,7 @@ const GreenhouseController = () => {
         });
 
       return () => {
-        mqtt.disconnect(client);
+        // mqtt.disconnect(client);
       }
     }, [])
   );

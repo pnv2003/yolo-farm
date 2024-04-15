@@ -25,11 +25,12 @@ const IrrigationController = () => {
     const [mode, setMode] = useState(Modes.MANUAL);
     const warning = soilMoisture < minValue || soilMoisture > maxValue;
 
-    const client = mqtt.init();
+    
 
     useFocusEffect(
         useCallback(() => {
 
+            const client = mqtt.init();
             mqtt.connect(client, [APIs.SOIL_MOISTURE_FEED, APIs.PUMP_FEED]);
             client.onMessageArrived = (message) => {
                 console.log("Topic: " + message.destinationName);
@@ -80,7 +81,7 @@ const IrrigationController = () => {
                 })
 
             return () => {
-                mqtt.disconnect(client);
+                // mqtt.disconnect(client);
             }
         }, [])
     );
