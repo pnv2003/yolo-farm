@@ -3,7 +3,14 @@ import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { useNavigation } from "@react-navigation/native";
 
-const SettingItem = ({children, icon, title, target, disabled, primColor, bgColor}) => {
+const SettingItem = ({
+    icon, 
+    title, 
+    content,
+    target, 
+    disabled, 
+    primColor, 
+    bgColor}) => {
 
     const navigation = useNavigation();
 
@@ -27,7 +34,7 @@ const SettingItem = ({children, icon, title, target, disabled, primColor, bgColo
         >
             <FontAwesomeIcon icon={icon} color={primColor} style={{ alignSelf: 'flex-end' }}/>
             <Text style={{ fontWeight: 'bold', color: primColor }}>{title}</Text>
-            {children}
+            <Text style={{ color: primColor }}>{content}</Text>
         </TouchableOpacity>
     );
 };

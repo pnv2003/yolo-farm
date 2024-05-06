@@ -12,16 +12,19 @@ export const METRIC = 'Thông số';
 export const SETTINGS = 'Cài đặt';
 export const SCHEDULE = 'Lịch biểu';
 export const ALLOWED_RANGE = 'Phạm vi';
-export const MODE_AUTOMATIC_DESCRIPTION = "Thiết bị được kích hoạt khi độ ẩm đất vượt quá phạm vi cho phép.";
+export const MODE_AUTOMATIC_DESCRIPTION = "Thiết bị được kích hoạt khi điều kiện môi trường vượt quá phạm vi cho phép.";
 export const MODE_SCHEDULED_DESCRIPTION = "Thiết bị có thể được kích hoạt theo lịch biểu được xác định sẵn.";
 export const MODE_MANUAL_DESCRIPTION = "Thiết bị được bật tắt thủ công thông qua ứng dụng.";
 export const SOIL_MOISTURE_RANGE_DESCRIPTION = "Tùy chỉnh phạm vi giá trị của độ ẩm đất để nhận được cảnh báo khi giá trị vượt quá giới hạn, và có thể kích hoạt máy bơm nếu sử dụng chế độ tự động.";
 export const CANCEL = "Hủy bỏ";
 export const CONFIRM = "Xác nhận";
 export const SAVE = "Lưu";
+export const LIGHT_INTENSITY = 'Cường độ ánh sáng';
+export const LIGHT_CONTROL = 'điều chỉnh ánh sáng';
+export const FAN = 'Quạt mini';
 
 
 //
-export function modeConfirm(device, mode) {
-    return "Bạn có chắc chắn muốn thay đổi chế độ của " + device + " thành " + mode + "?";
+export function modeConfirm(task, mode) {
+    return "Bạn có chắc chắn muốn thay đổi chế độ " + task + " thành " + mode + "?";
 }

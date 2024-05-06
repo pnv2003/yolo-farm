@@ -4,7 +4,7 @@ import * as Headers from "../constants/header";
 import * as Modes from "../constants/mode";
 import * as APIs from "../constants/api";
 import { StyleSheet, View } from "react-native";
-import { faGear, faWarning } from "@fortawesome/free-solid-svg-icons";
+import { faDroplet, faGear, faWarning } from "@fortawesome/free-solid-svg-icons";
 import { faCalendar } from "@fortawesome/free-regular-svg-icons";
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import DeviceToggler from "./DeviceToggler";
@@ -106,6 +106,8 @@ const IrrigationController = () => {
             <View style={styles.devices}>
                 <Text style={styles.header}>{Strings.DEVICE}</Text>
                 <DeviceToggler 
+                    deviceName={Strings.WATER_PUMP}
+                    icon={faDroplet}
                     enabled={pumping} 
                     onSwitch={onTogglePump}
                     disabled={mode !== Modes.MANUAL}
@@ -155,30 +157,28 @@ const IrrigationController = () => {
                 }}>
                     <SettingItem 
                         title={Strings.MODE} 
+                        content={Modes.modeTitles[mode]}
                         icon={faGear} 
                         target={Headers.PUMP_MODE} 
-                        primColor={MyTheme.blue}
+                        primColor={MyTheme.darkblue}
                         bgColor={MyTheme.lightblue}
-                    >
-                        <Text>{Modes.modeTitles[mode]}</Text>
-                    </SettingItem>
+                    />
                     <SettingItem 
                         title={Strings.SCHEDULE} 
+                        content={"Not Ready"}
                         icon={faCalendar} 
                         disabled={true} 
-                        primColor={MyTheme.blue}
-                        bgColor={MyTheme.lightblue}>
-                        <Text>Not Ready</Text>
-                    </SettingItem>
+                        primColor={MyTheme.darkblue}
+                        bgColor={MyTheme.lightblue}
+                    />
                     <SettingItem 
                         title={Strings.ALLOWED_RANGE} 
+                        content={`${minValue} - ${maxValue}%`}
                         icon={faWarning}
                         target={Headers.SOIL_MOISTURE_RANGE}
-                        primColor={MyTheme.blue}
+                        primColor={MyTheme.darkblue}
                         bgColor={MyTheme.lightblue}
-                    >
-                        <Text>{minValue}-{maxValue}%</Text>
-                    </SettingItem>
+                    />
                 </View>
             </View>
         </View>

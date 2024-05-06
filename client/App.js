@@ -12,6 +12,9 @@ import * as Notifications from "expo-notifications";
 import * as Device from 'expo-device';
 import Constants from 'expo-constants';
 import { useEffect, useRef, useState } from 'react';
+import Lighting from './screens/Lighting';
+import LightingMode from './screens/LightingMode';
+import LightingRange from './screens/LightingRange';
 
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -81,33 +84,33 @@ const Stack = createNativeStackNavigator();
 
 export default function App() {
 
-  const [expoPushToken, setExpoPushToken] = useState('');
-  const [notification, setNotification] = useState(false);
-  const notificationListener = useRef();
-  const responseListener = useRef();
+  // const [expoPushToken, setExpoPushToken] = useState('');
+  // const [notification, setNotification] = useState(false);
+  // const notificationListener = useRef();
+  // const responseListener = useRef();
 
-  useEffect(() => {
-    registerForPushNotificationAsync().then(token => setExpoPushToken(token));
+  // useEffect(() => {
+  //   registerForPushNotificationAsync().then(token => setExpoPushToken(token));
 
-    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-      setNotification(notification);
-    });
+  //   notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+  //     setNotification(notification);
+  //   });
 
-    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      console.log(response);
-    });
+  //   responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+  //     console.log(response);
+  //   });
 
-    return () => {
-      Notifications.removeNotificationSubscription(notificationListener.current);
-      Notifications.removeNotificationSubscription(responseListener.current);
-    };
-  }, []);
+  //   return () => {
+  //     Notifications.removeNotificationSubscription(notificationListener.current);
+  //     Notifications.removeNotificationSubscription(responseListener.current);
+  //   };
+  // }, []);
 
   return (
     <PaperProvider>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName={Headers.HOME}
+          initialRouteName={Headers.IRRIGATION}
           screenOptions={{
             header: (props) => <NavigationBar {...props} />
           }}
@@ -127,6 +130,18 @@ export default function App() {
           <Stack.Screen 
             name={Headers.SOIL_MOISTURE_RANGE}
             component={SoilMoistureRangeScreen}
+          />
+          <Stack.Screen 
+            name={Headers.LIGHTING}
+            component={Lighting}
+          />
+          <Stack.Screen
+            name={Headers.LIGHT_CONTROL_MODE}
+            component={LightingMode}
+          />
+          <Stack.Screen
+            name={Headers.LIGHTING_RANGE}
+            component={LightingRange}
           />
         </Stack.Navigator>
       </NavigationContainer>

@@ -14,4 +14,5 @@ export class MyTheme {
     static gray = "#CCCCCC";
     static darkgray = "#575A65";
     static lightblue = "#A4D9FF";
+    static darkblue = "#023E88";
 }

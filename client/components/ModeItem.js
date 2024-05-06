@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { MyTheme } from "../constants/theme";
 
 const ModeItem = ({ title, description, icon, color, selected = false, onPress }) => {
     return (
@@ -27,7 +28,8 @@ const styles = StyleSheet.create({
         gap: 50,
         borderStyle: 'solid',
         borderColor: 'black',
-        borderWidth: 1
+        borderWidth: 1,
+        paddingHorizontal: 20
     },
     selected: {
         flex: 1,
@@ -37,7 +39,7 @@ const styles = StyleSheet.create({
         borderStyle: 'solid',
         borderColor: 'black',
         borderWidth: 1,
-        backgroundColor: 'lightblue'
+        backgroundColor: MyTheme.lightblue
     },
     desc: {
         flex: 1
