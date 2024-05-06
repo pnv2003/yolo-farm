@@ -1,18 +1,13 @@
-import { useFocusEffect } from "@react-navigation/native";
-import React, { useCallback, useState } from "react";
-import * as Strings from '../constants/string';
-import * as Errors from '../constants/error';
-import * as APIs from '../constants/api';
-import * as http from "../utils/http";
+import React, { useState } from "react";
 import RangeSelect from "../components/RangeSelect";
 
-const LightingRange = () => {
-    const [minValue, setMinValue] = useState(3000);
-    const [maxValue, setMaxValue] = useState(13000);
+const TemperatureRange = () => {
+    const [minValue, setMinValue] = useState(20);
+    const [maxValue, setMaxValue] = useState(30);
 
     // useFocusEffect(
     //     useCallback(() => {
-    //         http.get('server', APIs.LIGHT_INTENSITY_RANGE)
+    //         http.get('server', APIs.)
     //             .then((data) => {
     //                 //TODO
     //                 // setMinValue(data.minMoisture.toString());
@@ -31,7 +26,7 @@ const LightingRange = () => {
         // http.request(
         //     'server',
         //     'PUT', 
-        //     APIs.LIGHT_INTENSITY_RANGE,
+        //     APIs.,
         //     {
         //         // TODO
         //         // minMoisture: parseInt(minValue),
@@ -41,17 +36,17 @@ const LightingRange = () => {
     }
 
     return (
-        <RangeSelect 
+        <RangeSelect
             minValue={minValue}
             maxValue={maxValue}
             setMinValue={setMinValue}
             setMaxValue={setMaxValue}
             onSave={handleSave}
-            minPossible={0}
+            minPossible={-Infinity}
             maxPossible={Infinity}
-            unit={Strings.LIGHT_INTENSITY_UNIT}
+            unit={String.fromCharCode(176) + "C"}
         />
     );
 }
 
-export default LightingRange;
+export default TemperatureRange;

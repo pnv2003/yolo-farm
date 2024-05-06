@@ -15,6 +15,12 @@ import { useEffect, useRef, useState } from 'react';
 import Lighting from './screens/Lighting';
 import LightingMode from './screens/LightingMode';
 import LightingRange from './screens/LightingRange';
+import Temperature from './screens/Temperature';
+import TemperatureMode from './screens/TemperatureMode';
+import TemperatureRange from './screens/TemperatureRange';
+import AirHumidity from './screens/AirHumidity';
+import AirHumidityMode from './screens/AirHumidityMode';
+import AirHumidityRange from './screens/AirHumidityRange';
 
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -110,7 +116,7 @@ export default function App() {
     <PaperProvider>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName={Headers.IRRIGATION}
+          initialRouteName={Headers.AIR_HUMIDITY}
           screenOptions={{
             header: (props) => <NavigationBar {...props} />
           }}
@@ -142,6 +148,30 @@ export default function App() {
           <Stack.Screen
             name={Headers.LIGHTING_RANGE}
             component={LightingRange}
+          />
+          <Stack.Screen
+            name={Headers.TEMPERATURE}
+            component={Temperature}
+          />
+          <Stack.Screen
+            name={Headers.TEMP_CONTROL_MODE}
+            component={TemperatureMode}
+          />
+          <Stack.Screen
+            name={Headers.TEMP_RANGE}
+            component={TemperatureRange}
+          />
+          <Stack.Screen
+            name={Headers.AIR_HUMIDITY}
+            component={AirHumidity}
+          />
+          <Stack.Screen
+            name={Headers.AIR_HUMI_CONTROL_MODE}
+            component={AirHumidityMode}
+          />
+          <Stack.Screen
+            name={Headers.AIR_HUMI_RANGE}
+            component={AirHumidityRange}
           />
         </Stack.Navigator>
       </NavigationContainer>

@@ -5,45 +5,44 @@ import * as Modes from "../constants/mode";
 import * as APIs from "../constants/api";
 import * as mqtt from "../utils/mqtt";
 import * as http from "../utils/http";
-import { StyleSheet, View } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
-import ControllerLayout from "../layouts/ControllerLayout";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faFan, faGear, faWarning } from "@fortawesome/free-solid-svg-icons";
 import { MyTheme } from "../constants/theme";
-import { Text } from "react-native-paper";
+import { View } from "react-native";
+import DeviceToggler from "./DeviceToggler";
+import { faFan, faGear, faWarning } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
 import SettingItem from "./SettingItem";
-import DeviceToggler from "./DeviceToggler";
+import ControllerLayout from "../layouts/ControllerLayout";
+import { Text } from "react-native-paper";
 
-
-const LightingController = () => {
-    const [lightIntensity, setLightIntensity] = useState(0);
+const AirHumidityController = () => {
+    const [airHumi, setAirHumi] = useState(0);
     const [fanOn, setFanOn] = useState(false);
     const [minValue, setMinValue] = useState(0);
     const [maxValue, setMaxValue] = useState(2000);
     const [mode, setMode] = useState(Modes.MANUAL);
-    const warning = lightIntensity < minValue || lightIntensity > maxValue;
+    const warning = airHumi < minValue || airHumi > maxValue;
 
     useFocusEffect(
         useCallback(() => {
             const client = mqtt.init();
-            mqtt.connect(client, [APIs.LIGHT, APIs.FAN]);
+            mqtt.connect(client, [APIs.AIR_HUMIDITY, APIs.FAN]);
             client.onMessageArrived = (message) => {
                 topic = message.destinationName;
                 data = message.payloadString;
 
-                if (topic === APIs.LIGHT) {
-                    setLightIntensity(parseInt(data));
+                if (topic === APIs.AIR_HUMIDITY) {
+                    setAirHumi(parseInt(data));
                 } else if (topic === APIs.FAN) {
                     setFanOn(data == "1");
                 }
             };
 
-            http.get('adafruit', APIs.LIGHT)
+            http.get('adafruit', APIs.AIR_HUMIDITY)
                 .then((data) => {
-                    setLightIntensity(data.last_value);
-                    console.log("Got lighting: " + data.last_value);
+                    setAirHumi(data.last_value);
+                    console.log("Got air humi: " + data.last_value);
                 });
 
             http.get('adafruit', APIs.FAN)
@@ -74,7 +73,7 @@ const LightingController = () => {
             enabled={fanOn}
             onSwitch={onToggleFan}
             disabled={mode !== Modes.MANUAL}
-            color={MyTheme.yellow}
+            color={MyTheme.green}
             icon={faFan}
         />
     );
@@ -87,23 +86,23 @@ const LightingController = () => {
         }}>
             { warning ? <FontAwesomeIcon icon={faWarning} color={MyTheme.red} size={32} /> : null}
             <Text style={{ fontSize: 24, color: warning ? MyTheme.red : MyTheme.black}}>
-                {Strings.LIGHT_INTENSITY}
+                {Strings.AIR_HUMIDITY}
             </Text>
             <AnimatedCircularProgress
                 size={200}
                 width={20}
-                fill={lightIntensity}
+                fill={airHumi}
                 rotation={0}
-                tintColor={ warning ? MyTheme.red : MyTheme.yellow }
+                tintColor={ warning ? MyTheme.red : MyTheme.green }
                 backgroundColor="#CCCCCC"
             >
             {
                 () => (
                     <>
                         <Text style={{ fontSize: 50 }}>
-                            {lightIntensity}
+                            {airHumi}
                         </Text>
-                        <Text style={{ fontSize: 25 }}>{Strings.LIGHT_INTENSITY_UNIT}</Text>
+                        <Text style={{ fontSize: 25 }}>{Strings.AIR_HUMIDITY_UNIT}</Text>
                     </>
                 )
             }
@@ -121,16 +120,16 @@ const LightingController = () => {
                 title={Strings.MODE}
                 content={Modes.modeTitles[mode]}
                 icon={faGear}
-                target={Headers.LIGHT_CONTROL_MODE}
-                primColor={MyTheme.yellow}
+                target={Headers.AIR_HUMI_CONTROL_MODE}
+                primColor={MyTheme.green}
                 bgColor={MyTheme.black}
             />
             <SettingItem 
                 title={Strings.ALLOWED_RANGE}
-                content={`${minValue} - ${maxValue} ${Strings.LIGHT_INTENSITY_UNIT}`}
+                content={`${minValue} - ${maxValue} ${Strings.AIR_HUMIDITY_UNIT}`}
                 icon={faWarning}
-                target={Headers.LIGHTING_RANGE}
-                primColor={MyTheme.yellow}
+                target={Headers.AIR_HUMI_RANGE}
+                primColor={MyTheme.green}
                 bgColor={MyTheme.black}
             />
         </View>
@@ -145,4 +144,4 @@ const LightingController = () => {
     )
 }
 
-export default LightingController;
+export default AirHumidityController;

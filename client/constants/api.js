@@ -9,7 +9,7 @@ export const PUMP = 'thanhduy/feeds/pumb';
 export const SOIL_MOISTURE = 'thanhduy/feeds/soil-moisture';
 export const FAN = 'thanhduy/feeds/fan';
 export const LIGHT = 'thanhduy/feeds/light';
-export const AIR_HUMIDITY = 'thanhduy/air-humid';
+export const AIR_HUMIDITY = 'thanhduy/feeds/air-humid';
 export const TEMPERATURE = 'thanhduy/feeds/temp';
 
 // Server HTTP APIs

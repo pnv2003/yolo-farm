@@ -31,7 +31,7 @@ export async function get(host, path) {
         
         return response.text().then(text => { throw new Error(text); });
     } catch (error) {
-        console.error('HTTP GET Failed:' + error);
+        console.error('HTTP GET Failed: ' + error);
     }
 }
 

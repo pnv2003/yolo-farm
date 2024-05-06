@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     },
     inputField: {
         // flex: 1,
-        // width: '80%',
+        width: '50%',
         alignItems: 'center'
     },  
     input: {
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
         // flex: 1,
         // alignItems: 'center',
         // justifyContent: 'center',
-        // width: '50%',
+        width: '100%',
         // fontSize: 36
     },
 });
