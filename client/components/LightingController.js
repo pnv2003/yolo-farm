@@ -42,13 +42,13 @@ const LightingController = () => {
 
             http.get('adafruit', APIs.LIGHT)
                 .then((data) => {
-                    setLightIntensity(data.last_value);
+                    setLightIntensity(parseInt(data.last_value));
                     console.log("Got lighting: " + data.last_value);
                 });
 
             http.get('adafruit', APIs.FAN)
                 .then((data) => {
-                    setFanOn(data.last_value);
+                    setFanOn(parseInt(data.last_value));
                     console.log("Got fan: " + data.last_value);
                 });
         }, [])

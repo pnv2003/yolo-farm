@@ -41,13 +41,13 @@ const TemperatureController = () => {
 
             http.get('adafruit', APIs.TEMPERATURE)
                 .then((data) => {
-                    setTemperature(data.last_value);
+                    setTemperature(parseInt(data.last_value));
                     console.log("Got temp: " + data.last_value);
                 });
 
             http.get('adafruit', APIs.FAN)
                 .then((data) => {
-                    setFanOn(data.last_value);
+                    setFanOn(parseInt(data.last_value));
                     console.log("Got fan: " + data.last_value);
                 });
         }, [])

@@ -116,7 +116,7 @@ export default function App() {
     <PaperProvider>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName={Headers.AIR_HUMIDITY}
+          initialRouteName={Headers.HOME}
           screenOptions={{
             header: (props) => <NavigationBar {...props} />
           }}

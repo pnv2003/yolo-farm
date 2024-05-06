@@ -41,13 +41,13 @@ const AirHumidityController = () => {
 
             http.get('adafruit', APIs.AIR_HUMIDITY)
                 .then((data) => {
-                    setAirHumi(data.last_value);
+                    setAirHumi(parseInt(data.last_value));
                     console.log("Got air humi: " + data.last_value);
                 });
 
             http.get('adafruit', APIs.FAN)
                 .then((data) => {
-                    setFanOn(data.last_value);
+                    setFanOn(parseInt(data.last_value));
                     console.log("Got fan: " + data.last_value);
                 });
         }, [])

@@ -54,7 +54,7 @@ const IrrigationController = () => {
 
             http.get('adafruit', APIs.SOIL_MOISTURE_FEED)
                 .then((data) => {
-                    setSoilMoisture(data.last_value);
+                    setSoilMoisture(parseInt(data.last_value));
 
                     console.log("Got moisture: " + data.last_value);
                 });
