@@ -40,6 +40,55 @@ async function setMinMaxMoisture(req, res) {
   res.send("Successful");
 }
 
+async function getScheduleTask(req, res) {
+  try {
+    const tasks = await water_model.getScheduleTask();
+    res.json(tasks);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+async function createTask(req, res) {
+  try {
+    const task = req.body;
+    const createdTask = await water_model.createTask(task);
+    res.status(201).json(createdTask);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+async function updateTask(req, res) {
+  try {
+    const _id = req.params.id;
+    const updatedValue = req.body;
+    const updatedTask = await water_model.updateTask(_id, updatedValue);
+    res.json(updatedTask);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+async function deleteTask(req, res) {
+  try {
+    const taskId = req.params.id;
+    await water_model.deleteTask(taskId);
+    res.sendStatus(204);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+}
+
+async function deleteAllTasks(req, res) {
+  try {
+    await water_model.deleteAllTasks();
+    res.sendStatus(204);
+  } catch (error) {
+    res.status(500).json("Internet Server Error");
+  }
+}
+
 module.exports = {
   getMoisture,
   setMoisture,
@@ -47,4 +96,9 @@ module.exports = {
   setMode,
   getMinMaxMoisture,
   setMinMaxMoisture,
+  getScheduleTask,
+  createTask,
+  updateTask,
+  deleteTask,
+  deleteAllTasks
 };

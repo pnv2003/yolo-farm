@@ -1,4 +1,7 @@
 const axios = require("axios");
+const ObjectId = require("../config/type");
+const DatabaseClient = require("../config/mongodb");
+const db = DatabaseClient.getClient();
 
 var mode = "automatic"; //Automatic or Manual or Schedule
 var soil_moisture = 0; // cần lấy giá trị mới nhất trong database
@@ -93,6 +96,42 @@ async function inact_pump() {
   pump = 0;
 }
 
+async function getScheduleTask(){
+  const results = await db.collection("Task").find({}).toArray();
+  return results
+}
+
+async function createTask(task){
+  task["_id"] = String(Date.now());
+  await db.collection("Task").insertOne(task);
+}
+
+async function updateTask(taskId, updatedValue) {
+  try {
+    const updatedTask = await db.collection("Task").findOneAndUpdate(
+      { _id: taskId},
+      { $set: updatedValue },
+      { new: true }
+    );
+    console.log(updatedTask);
+    if (!updatedTask) {
+      throw new Error("Task not found");
+    }
+    return updatedTask;
+  } catch (error) {
+    console.error("Error updating task:", error);
+    throw error;
+  }
+}
+  
+async function deleteTask(taskId){
+  await db.collection("Task").findOneAndDelete({_id: taskId});
+}
+
+async function deleteAllTasks(){
+  await db.collection("Task").deleteMany({});
+}
+
 module.exports = {
   getMoisture,
   setMoisture,
@@ -102,4 +141,9 @@ module.exports = {
   set_minmax_moisture,
   checkMoisture,
   schedule_mode,
+  getScheduleTask,
+  createTask,
+  updateTask,
+  deleteTask,
+  deleteAllTasks,
 };
