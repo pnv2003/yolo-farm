@@ -88,7 +88,7 @@ const AirHumidityController = () => {
             deviceName={Strings.FAN}
             enabled={fanOn}
             onSwitch={onToggleFan}
-            disabled={mode !== Modes.MANUAL}
+            disabled={true}
             color={MyTheme.green}
             icon={faFan}
         />
@@ -137,6 +137,7 @@ const AirHumidityController = () => {
                 content={Modes.modeTitles[mode]}
                 icon={faGear}
                 target={Headers.AIR_HUMI_CONTROL_MODE}
+                disabled={true}
                 primColor={MyTheme.green}
                 bgColor={MyTheme.black}
             />

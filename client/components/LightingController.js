@@ -73,7 +73,7 @@ const LightingController = () => {
             deviceName={Strings.FAN}
             enabled={fanOn}
             onSwitch={onToggleFan}
-            disabled={mode !== Modes.MANUAL}
+            disabled={true}
             color={MyTheme.yellow}
             icon={faFan}
         />
@@ -122,6 +122,7 @@ const LightingController = () => {
                 content={Modes.modeTitles[mode]}
                 icon={faGear}
                 target={Headers.LIGHT_CONTROL_MODE}
+                disabled={true}
                 primColor={MyTheme.yellow}
                 bgColor={MyTheme.black}
             />
