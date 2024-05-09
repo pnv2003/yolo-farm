@@ -15,5 +15,14 @@ router.get('/min-max-moisture', waterController.getMinMaxMoisture);
 
 router.put('/min-max-moisture', waterController.setMinMaxMoisture);
 
+router.get('/task', waterController.getScheduleTask);
+
+router.post('/task', waterController.createTask);
+
+router.put('/task/:id', waterController.updateTask);
+
+router.delete('/task/:id', waterController.deleteTask);
+
+router.delete('/task', waterController.deleteAllTasks);
 
 module.exports = router;
