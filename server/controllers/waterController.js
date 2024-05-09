@@ -24,7 +24,7 @@ async function setMode(req, res) {
   await water_model.setMode(req.body.mode);
   if (req.body.mode == "schedule")
     water_model.schedule_mode(req.body.start, req.body.end);
-  res.send("Successful");
+  res.json({ "status": "OK" });
 }
 
 async function getMinMaxMoisture(req, res) {
@@ -37,7 +37,7 @@ async function setMinMaxMoisture(req, res) {
     req.body.minMoisture,
     req.body.maxMoisture
   );
-  res.send("Successful");
+  res.json({ "status": "OK" });
 }
 
 async function getScheduleTask(req, res) {

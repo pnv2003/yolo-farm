@@ -118,7 +118,7 @@ export default function App() {
     <PaperProvider>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName={Headers.LIGHTING}
+          initialRouteName={Headers.TEMPERATURE}
           screenOptions={{
             header: (props) => <NavigationBar {...props} />
           }}

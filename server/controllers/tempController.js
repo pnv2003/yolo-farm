@@ -9,7 +9,7 @@ async function setTemp(req, res) {
   try {
     await temp_model.setTemp(req.body.temp);
     checktemp = await temp_model.checkTemp(req.body.temp);
-    res.send("Successful");
+    res.json({ "status": "OK" });
   } catch (err) {
     throw err;
   }
@@ -25,7 +25,7 @@ async function setMinMaxTemp(req, res) {
     req.body.minTemp,
     req.body.maxTemp
   );
-  res.send("Successful");
+  res.json({ "status": "OK" });
 }
 
 async function getMode(req, res) {
@@ -35,7 +35,7 @@ async function getMode(req, res) {
 
 async function setMode(req, res) {
   await temp_model.setMode(req.body.mode);
-  res.send("Successful");
+  res.json({ "status": "OK" });
 }
 
 module.exports = {

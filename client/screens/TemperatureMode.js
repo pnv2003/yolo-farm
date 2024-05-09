@@ -15,15 +15,15 @@ const TemperatureMode = () => {
     const [pendingMode, setPendingMode] = useState(Modes.MANUAL);
     const [confirmVisible, setConfirmVisible] = useState(false);
 
-    // useFocusEffect(
-    //     useCallback(() => {
-    //         http.get('server', APIs.TEMP_CONTROL_MODE)
-    //             .then((data) => {
-    //                 setMode(data.mode);
-    //                 console.log("Got mode: " + data.mode);
-    //             })
-    //     })
-    // );
+    useFocusEffect(
+        useCallback(() => {
+            http.get('server', APIs.TEMP_CONTROL_MODE)
+                .then((data) => {
+                    setMode(data.mode);
+                    console.log("Got mode: " + data.mode);
+                })
+        })
+    );
 
     function onSelect(selectedMode) {
         if (mode !== selectedMode) {
@@ -37,14 +37,14 @@ const TemperatureMode = () => {
         setConfirmVisible(false);
 
         console.log("Send: " + pendingMode);
-        // http.request(
-        //     'server',
-        //     'PUT', 
-        //     APIs.TEMP_CONTROL_MODE,
-        //     {
-        //         mode: pendingMode
-        //     }
-        // );
+        http.request(
+            'server',
+            'PUT', 
+            APIs.TEMP_CONTROL_MODE,
+            {
+                mode: pendingMode
+            }
+        );
     }    
 
     function onCancel() {

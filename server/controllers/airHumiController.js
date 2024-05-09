@@ -9,7 +9,7 @@ async function setHumi(req, res) {
   try {
     await humi_model.setHumi(req.body.humi);
     checkHumi = await humi_model.checkHumi(req.body.humi);
-    res.send("Successful");
+    res.json({ "status": "OK" });
   } catch (err) {
     throw err;
   }
@@ -25,7 +25,7 @@ async function setMinMaxHumi(req, res) {
     req.body.minHumi,
     req.body.maxHumi
   );
-  res.send("Successful");
+  res.json({ "status": "OK" });
 }
 
 async function getMode(req, res) {
@@ -35,7 +35,7 @@ async function getMode(req, res) {
 
 async function setMode(req, res) {
   await humi_model.setMode(req.body.mode);
-  res.send("Successful");
+  res.json({ "status": "OK" });
 }
 
 module.exports = {

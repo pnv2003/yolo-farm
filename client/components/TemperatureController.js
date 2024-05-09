@@ -50,6 +50,16 @@ const TemperatureController = () => {
                     setFanOn(parseInt(data.last_value));
                     console.log("Got fan: " + data.last_value);
                 });
+
+            http.get('server', APIs.TEMP_CONTROL_MODE)
+                .then((data) => {
+                    setMode(data.mode);
+                });
+            http.get('server', APIs.TEMP_RANGE)
+                .then((data) => {
+                    setMinValue(data.minTemp);
+                    setMaxValue(data.maxTemp);
+                })
         }, [])
     );
 

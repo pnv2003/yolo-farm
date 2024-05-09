@@ -32,7 +32,7 @@ export const FAN = 'Quạt mini';
 export const SOIL_MOISTURE_UNIT = "%";
 export const TEMP_UNIT = String.fromCharCode(176) + "C";
 export const LIGHT_INTENSITY_UNIT = "lux";
-export const AIR_HUMIDITY_UNIT = "g.m^3";
+export const AIR_HUMIDITY_UNIT = "%";
 
 //
 export function modeConfirm(task, mode) {

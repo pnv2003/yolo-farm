@@ -2,12 +2,12 @@
 export const PUMP_FEED = 'thanhduy/feeds/pumb';
 export const PUMP_DATA = PUMP_FEED + '/data';
 export const SOIL_MOISTURE_FEED = 'thanhduy/feeds/soil-moisture';
-export const FAN_DATA = FAN + '/data';
 
 // Adafruit MQTT APIs
 export const PUMP = 'thanhduy/feeds/pumb';
 export const SOIL_MOISTURE = 'thanhduy/feeds/soil-moisture';
 export const FAN = 'thanhduy/feeds/fan';
+export const FAN_DATA = FAN + '/data';
 export const LIGHT = 'thanhduy/feeds/light';
 export const AIR_HUMIDITY = 'thanhduy/feeds/air-humid';
 export const TEMPERATURE = 'thanhduy/feeds/temp';

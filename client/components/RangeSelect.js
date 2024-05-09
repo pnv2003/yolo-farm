@@ -14,12 +14,12 @@ const RangeSelect = ({
     maxPossible,
     unit
 }) => {
-    // if (!minPossible) {
-    //     minPossible = -Infinity;
-    // }
-    // if (!maxPossible) {
-    //     maxPossible = Infinity;
-    // }
+    if (!minPossible) {
+        minPossible = -Infinity;
+    }
+    if (!maxPossible) {
+        maxPossible = Infinity;
+    }
 
     return (
         <View style={styles.container}>
@@ -30,21 +30,21 @@ const RangeSelect = ({
                     mode="outlined"
                     label={"min (" + unit + ")"}
                     keyboardType="numeric"
-                    value={minValue.toString()}
+                    value={minValue}
                     onChangeText={(text) => setMinValue(text)}
                     // maxLength={3}
                 />
                 <HelperText
                     type="error" 
                     visible={
-                        minValue < minPossible || 
-                        minValue > maxPossible || 
-                        minValue > maxValue
+                        parseInt(minValue) < minPossible || 
+                        parseInt(minValue) > maxPossible || 
+                        parseInt(minValue) > parseInt(maxValue)
                     }
                 >
                     {
-                        (minValue == NaN) ? Errors.requiredField() :
-                        (minValue > maxValue) 
+                        (parseInt(minValue) == NaN) ? Errors.requiredField() :
+                        (parseInt(minValue) > parseInt(maxValue)) 
                             ?   Errors.minMaxError()
                             :   Errors.invalidRange(minPossible, maxPossible)
                     }
@@ -56,21 +56,21 @@ const RangeSelect = ({
                     mode="outlined"
                     label={"max (" + unit + ")"}
                     keyboardType="numeric"
-                    value={maxValue.toString()}
+                    value={maxValue}
                     onChangeText={(text) => setMaxValue(parseInt(text))}
                     // maxLength={3}
                 />
                 <HelperText 
                     type="error" 
                     visible={
-                        maxValue < minPossible || 
-                        maxValue > maxPossible || 
-                        minValue > maxValue
+                        parseInt(maxValue) < minPossible || 
+                        parseInt(maxValue) > maxPossible || 
+                        parseInt(minValue) > parseInt(maxValue)
                     }
                 >
                     {
-                        (maxValue == NaN) ? Errors.requiredField() :
-                        (minValue > maxValue) 
+                        (parseInt(maxValue) == NaN) ? Errors.requiredField() :
+                        (parseInt(minValue) > parseInt(maxValue)) 
                             ?   Errors.minMaxError()
                             :   Errors.invalidRange(minPossible, maxPossible)
                     }

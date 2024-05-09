@@ -50,6 +50,18 @@ const AirHumidityController = () => {
                     setFanOn(parseInt(data.last_value));
                     console.log("Got fan: " + data.last_value);
                 });
+
+            http.get('server', APIs.AIR_HUMI_CONTROL_MODE)
+                .then((data) => {
+                    setMode(data.mode)
+                    console.log("Got mode: " + data.mode);
+                });
+
+            http.get('server', APIs.AIR_HUMI_RANGE)
+                .then((data) => {
+                    setMinValue(data.minHumi);
+                    setMaxValue(data.maxHumi);
+                })
         }, [])
     );
 
@@ -63,7 +75,11 @@ const AirHumidityController = () => {
             {
                 value: fanOn ? '0' : '1'
             }
-        );
+        ).then((response) => {
+            if (response.error) {
+                console.log("Failed to toggle fan: " + response.error);
+            }
+        });
         setFanOn(!fanOn);
     }
 
