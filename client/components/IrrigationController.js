@@ -167,7 +167,7 @@ const IrrigationController = () => {
                         title={Strings.SCHEDULE} 
                         content={"Not Ready"}
                         icon={faCalendar} 
-                        disabled={true} 
+                        target={Headers.PUMP_SCHEDULE}
                         primColor={MyTheme.darkblue}
                         bgColor={MyTheme.lightblue}
                     />

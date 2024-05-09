@@ -21,6 +21,8 @@ import TemperatureRange from './screens/TemperatureRange';
 import AirHumidity from './screens/AirHumidity';
 import AirHumidityMode from './screens/AirHumidityMode';
 import AirHumidityRange from './screens/AirHumidityRange';
+import PumpSchedule from './screens/PumpSchedule';
+import AddScheduledTasks from './screens/AddScheduledTask';
 
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -116,7 +118,7 @@ export default function App() {
     <PaperProvider>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName={Headers.HOME}
+          initialRouteName={Headers.LIGHTING}
           screenOptions={{
             header: (props) => <NavigationBar {...props} />
           }}
@@ -133,6 +135,14 @@ export default function App() {
             name={Headers.PUMP_MODE}
             component={PumpModeScreen}
           />
+          {/* <Stack.Screen
+            name={Headers.PUMP_SCHEDULE}
+            component={PumpSchedule}
+          />
+          <Stack.Screen 
+            name={Headers.ADD_SCHEDULED_TASK}
+            component={AddScheduledTasks}
+          /> */}
           <Stack.Screen 
             name={Headers.SOIL_MOISTURE_RANGE}
             component={SoilMoistureRangeScreen}
@@ -141,10 +151,10 @@ export default function App() {
             name={Headers.LIGHTING}
             component={Lighting}
           />
-          <Stack.Screen
+          {/* <Stack.Screen
             name={Headers.LIGHT_CONTROL_MODE}
             component={LightingMode}
-          />
+          /> */}
           <Stack.Screen
             name={Headers.LIGHTING_RANGE}
             component={LightingRange}

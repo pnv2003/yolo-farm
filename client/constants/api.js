@@ -15,10 +15,10 @@ export const TEMPERATURE = 'thanhduy/feeds/temp';
 // Server HTTP APIs
 export const PUMP_MODE = 'watering/mode';
 export const TEMP_CONTROL_MODE = 'temperature/mode';
-export const LIGHT_CONTROL_MODE = '';
+// export const LIGHT_CONTROL_MODE = '';
 export const AIR_HUMI_CONTROL_MODE = 'air-humidity/mode';
 
 export const SOIL_MOISTURE_RANGE = 'watering/min-max-moisture';
 export const TEMP_RANGE = 'temperature/min-max-temp';
-export const LIGHT_INTENSITY_RANGE = '';
+export const LIGHT_INTENSITY_RANGE = 'light/min-max-light';
 export const AIR_HUMI_RANGE = 'air-humidity/min-max-air-humi';
