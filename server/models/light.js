@@ -1,4 +1,4 @@
-var LightEnergy = 0;
+var LightEnergy = 50;
 var minLightEnergy = 40;
 var maxLightEnergy = 60;
 
