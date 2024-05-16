@@ -63,7 +63,7 @@ export default function ExpoCamera({photo, setPhoto}) {
                 type={type}
                 flashMode={flash}
                 ref={cameraRef}
-                ratio={'16:9'}
+                ratio={'4:3'}
             >
                 <View style={{
                     flexDirection: 'row',
