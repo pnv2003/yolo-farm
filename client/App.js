@@ -21,6 +21,7 @@ import TemperatureRange from './screens/TemperatureRange';
 import AirHumidity from './screens/AirHumidity';
 import AirHumidityMode from './screens/AirHumidityMode';
 import AirHumidityRange from './screens/AirHumidityRange';
+import AudioRecorder from './components/AudioRecorder';
 import PumpSchedule from './screens/PumpSchedule';
 import AddScheduledTasks from './screens/AddScheduledTask';
 import PlantCare from './screens/PlantCare';
@@ -119,7 +120,7 @@ export default function App() {
     <PaperProvider>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName={Headers.PLANT_CARE}
+          initialRouteName= "Audio"
           screenOptions={{
             header: (props) => <NavigationBar {...props} />
           }}
@@ -187,6 +188,10 @@ export default function App() {
           <Stack.Screen
             name={Headers.PLANT_CARE}
             component={PlantCare}
+          />
+          <Stack.Screen
+            name="Audio"
+            component={AudioRecorder}
           />
         </Stack.Navigator>
       </NavigationContainer>
