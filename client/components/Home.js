@@ -28,6 +28,8 @@ const GreenhouseController = () => {
   const [lightingIntensity, setLightingIntensity] = useState(617);
   const [temperature, setTemperature] = useState(362);
   const [temperatureMode, setTemperatureMode] = useState("MANUAL");
+  const [airhumid, setAirhumid] = useState(362);
+  const [airhumidMode, setAirhumidMode] = useState("MANUAL");
   
   useFocusEffect(
     useCallback(() => {
@@ -105,6 +107,14 @@ const GreenhouseController = () => {
       color: "rgba(231, 156, 36, 0.8)",
       icon: "thermometer", 
     },
+    {
+      title: "airhumid",
+      value: `${temperature}`,
+      mode: temperatureMode,
+      toggleMode: toggleTemperatureMode,
+      color: "rgba(21, 156, 36, 0.8)",
+      icon: "thermometer", 
+    },
   ];
 
   const renderItem = ({ item }) => (
@@ -151,6 +161,36 @@ const GreenhouseController = () => {
         <TouchableOpacity
           style={styles.ripple}
           onPress={() => navigation.navigate(Headers.IRRIGATION)}
+        >
+          <View style={styles.iconContainer}>
+            <FontAwesome name="gear" size={24} color="white" />
+          </View>
+        </TouchableOpacity>
+      )}
+      {item.title === "Temperature" && (
+        <TouchableOpacity
+          style={styles.ripple}
+          onPress={() => navigation.navigate(Headers.TEMPERATURE)}
+        >
+          <View style={styles.iconContainer}>
+            <FontAwesome name="gear" size={24} color="white" />
+          </View>
+        </TouchableOpacity>
+      )}
+      {item.title === "Lighting" && (
+        <TouchableOpacity
+          style={styles.ripple}
+          onPress={() => navigation.navigate(Headers.LIGHTING)}
+        >
+          <View style={styles.iconContainer}>
+            <FontAwesome name="gear" size={24} color="white" />
+          </View>
+        </TouchableOpacity>
+      )}
+      {item.title === "airhumid" && (
+        <TouchableOpacity
+          style={styles.ripple}
+          onPress={() => navigation.navigate(Headers.AIR_HUMIDITY)}
         >
           <View style={styles.iconContainer}>
             <FontAwesome name="gear" size={24} color="white" />

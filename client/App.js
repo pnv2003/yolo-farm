@@ -7,6 +7,7 @@ import * as Headers from './constants/header';
 import PumpModeScreen from './screens/PumpModeScreen';
 import SoilMoistureRangeScreen from './screens/SoilMoistureRangeScreen';
 import NavigationBar from './components/NavigationBar';
+import Graph from './components/Graph';
 import GreenhouseController from './components/Home';
 import * as Notifications from "expo-notifications";
 import * as Device from 'expo-device';
@@ -192,6 +193,10 @@ export default function App() {
           <Stack.Screen
             name="Audio"
             component={AudioRecorder}
+          />
+          <Stack.Screen
+            name="Graph"
+            component={Graph}
           />
         </Stack.Navigator>
       </NavigationContainer>
