@@ -31,6 +31,16 @@
         "projectId": "006956b8-527d-447c-b0f8-8559125bbf02"
       }
     },
-    "owner": "pnv2003"
+    "owner": "pnv2003",
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
+          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
+          "recordAudioAndroid": true
+        }
+      ]
+    ]
   }
 }
