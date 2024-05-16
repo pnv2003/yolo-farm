@@ -65,3 +65,34 @@ export async function request(host, method, path, data) {
         console.error('HTTP ' + method + ' Failed: ' + error);
     }
 }
+
+export async function upload(host, method, path, data) {
+    try {
+        if (host == "server") {
+            host = SERVER_HOST;
+        } else if (host == "adafruit") {
+            host = ADAFRUIT_HOST;
+            path += "?x-aio-key=" + AIO_KEY;
+        } else {
+            window.alert("Invalid host: " + host)
+        }
+
+        const response = await fetch (host + path, {
+            method: method,
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            },
+            body: data
+        });
+
+        // return response;
+        if (response.ok) {
+            const json = await response.json();
+            return json;
+        } 
+        
+        return response.text().then(text => { throw new Error(text); });
+    } catch(error) {
+        console.error('HTTP ' + method + ' Failed: ' + error);
+    }
+}
