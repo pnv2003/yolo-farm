@@ -23,6 +23,7 @@ import AirHumidityMode from './screens/AirHumidityMode';
 import AirHumidityRange from './screens/AirHumidityRange';
 import PumpSchedule from './screens/PumpSchedule';
 import AddScheduledTasks from './screens/AddScheduledTask';
+import PlantCare from './screens/PlantCare';
 
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -118,7 +119,7 @@ export default function App() {
     <PaperProvider>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName={Headers.TEMPERATURE}
+          initialRouteName={Headers.PLANT_CARE}
           screenOptions={{
             header: (props) => <NavigationBar {...props} />
           }}

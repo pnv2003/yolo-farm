@@ -3,6 +3,7 @@ import { View } from "react-native";
 import ExpoCamera from "../components/ExpoCamera";
 import { Button, Text } from "react-native-paper";
 import * as http from "../utils/http";
+import { MyTheme } from "../constants/theme";
 
 const PlantCare = () => {
     const [photo, setPhoto] = useState(null);
@@ -23,16 +24,18 @@ const PlantCare = () => {
                 });
 
                 // TODO: upload to server
-                http.upload('server', 'POST', '/disease', formData)
-                    .then(response => {
-                        console.log(response);
-                    });
+                // http.upload('server', 'POST', '/disease', formData)
+                //     .then(response => {
+                //         console.log(response);
+                //     });
 
-                http.get('server', '/disease')
-                    .then(data => {
-                        setResult(data.result);
-                        setAnalyzing(false);
-                    });
+                // setTimeout(() => {}, 2000);
+
+                // http.get('server', '/disease')
+                //     .then(data => {
+                //         setResult(data.disease);
+                //         setAnalyzing(false);
+                //     });
                 
             } catch(e) {
                 console.log("Failed to upload photo: " + e);
@@ -46,18 +49,33 @@ const PlantCare = () => {
         <View style={{
             flex: 1,
             justifyContent: 'center',
-            alignItems: 'center'
+            // backgroundColor: '#000'
+            // alignItems: 'center'
         }}>
             <ExpoCamera photo={photo} setPhoto={setPhoto}/>
             <Button 
                 onPress={onAnalyze}
                 disabled={analyzing}
+                mode="contained"
+                buttonColor={MyTheme.blue}
+                style={{
+                    alignSelf: 'center',
+                    marginTop: 20
+                }}
             >
                 {analyzing ? "Analyzing..." : "Analyze"}
             </Button>
-            <Text>
+            <Text style={{
+                alignSelf: 'center',
+                marginTop: 20,
+                marginBottom: 10,
+                fontSize: 20,
+                color: result ? ( result == "None" ? MyTheme.green : MyTheme.red) : MyTheme.darkblue
+            }}>
                 {
-                    result
+                    analyzing
+                    ? "Be patient..."
+                    : result
                         ? "Result: " + result
                         : "Press 'Analyze' to start!"
                 }
