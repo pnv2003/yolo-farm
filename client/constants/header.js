@@ -18,3 +18,5 @@ export const AIR_HUMI_CONTROL_MODE = 'Chế độ điều chỉnh độ ẩm kk'
 export const LIGHTING_RANGE = Strings.ALLOWED_RANGE + ' ' + Strings.LIGHT_INTENSITY;
 export const TEMP_RANGE = Strings.ALLOWED_RANGE + ' ' + Strings.TEMPERATURE;
 export const AIR_HUMI_RANGE = Strings.ALLOWED_RANGE + ' ' + Strings.AIR_HUMIDITY;
+//
+export const PLANT_CARE = "PlantCare - Disease Diagnosis";
