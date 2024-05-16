@@ -183,6 +183,10 @@ export default function App() {
             name={Headers.AIR_HUMI_RANGE}
             component={AirHumidityRange}
           />
+          <Stack.Screen
+            name={Headers.PLANT_CARE}
+            component={PlantCare}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>
