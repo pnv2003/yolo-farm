@@ -4,6 +4,7 @@ import React from "react";
 import * as Strings from './../constants/string';
 import { View } from "react-native";
 import { Switch, Text } from "react-native-paper";
+import { MyTheme } from "../constants/theme";
 
 const DeviceToggler = ({enabled, onSwitch, disabled, color, icon, deviceName}) => {
     return (
@@ -18,7 +19,7 @@ const DeviceToggler = ({enabled, onSwitch, disabled, color, icon, deviceName}) =
                 <FontAwesomeIcon icon={icon} size={24} color={color} />
                 <View>
                     <Text>{deviceName}</Text>
-                    <Text>{enabled ? Strings.ON : Strings.OFF}</Text>
+                    <Text style={{ color: enabled ? MyTheme.green : MyTheme.darkgray }}>{enabled ? Strings.ON : Strings.OFF}</Text>
                 </View>
             </View>
             <Switch
