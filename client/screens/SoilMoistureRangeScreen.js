@@ -8,6 +8,7 @@ import { MyTheme } from "../constants/theme";
 import * as http from "../utils/http";
 import { useFocusEffect } from "@react-navigation/native";
 import Loading from "../components/Loading";
+import RangeSelect from "../components/RangeSelect";
 
 const SoilMoistureRangeScreen = () => {
 
@@ -46,74 +47,16 @@ const SoilMoistureRangeScreen = () => {
 
     return (
         loading ? <Loading color={MyTheme.blue} /> :
-        <View style={styles.container}>
-            <Text style={styles.desc}>{Strings.SOIL_MOISTURE_RANGE_DESCRIPTION}</Text>
-            <View style={styles.inputField}>
-                <TextInput 
-                    style={styles.input}
-                    mode="outlined"
-                    label={"Min"}
-                    keyboardType="numeric"
-                    value={minValue}
-                    onChangeText={(text) => setMinValue(text)}
-                    maxLength={3}
-                />
-                <HelperText 
-                    type="error" 
-                    visible={
-                        minValue < 0 || 
-                        minValue > 100 || 
-                        minValue > maxValue
-                    }
-                >
-                    {
-                        (minValue == NaN) ? Errors.requiredField() :
-                        (minValue > maxValue) 
-                            ?   Errors.minMaxError()
-                            :   Errors.invalidRange(0, 100)
-                    }
-                </HelperText>
-            </View>
-            <View style={styles.inputField}>
-                <TextInput 
-                    style={styles.input}
-                    mode="outlined"
-                    label={"Max"}
-                    keyboardType="numeric"
-                    value={maxValue}
-                    onChangeText={(text) => setMaxValue(parseInt(text))}
-                    maxLength={3}
-                />
-                <HelperText 
-                    type="error" 
-                    visible={
-                        maxValue < 0 || 
-                        maxValue > 100 || 
-                        minValue > maxValue
-                    }
-                >
-                    {
-                        (maxValue == NaN) ? Errors.requiredField() :
-                        (minValue > maxValue) 
-                            ?   Errors.minMaxError()
-                            :   Errors.invalidRange(0, 100)
-                    }
-                </HelperText>
-            </View>
-            <Button 
-                style={{
-                    width: '30%',
-                    height: 50,
-                    justifyContent: 'center'
-                }}
-                icon={"content-save"} 
-                mode="contained"
-                onPress={handleSave}
-                buttonColor={MyTheme.blue}
-            >
-                {Strings.SAVE}
-            </Button>
-        </View>
+        <RangeSelect
+            minValue={minValue}
+            maxValue={maxValue}
+            setMinValue={setMinValue}
+            setMaxValue={setMaxValue}
+            onSave={handleSave}
+            minPossible={0}
+            maxPossible={100}
+            unit={Strings.SOIL_MOISTURE_UNIT}
+        />
     );
 };
 
