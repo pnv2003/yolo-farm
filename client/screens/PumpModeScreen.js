@@ -65,14 +65,14 @@ const PumpModeScreen = () => {
                 selected={mode === Modes.AUTO}
                 onPress={() => onSelect(Modes.AUTO)}
             />
-            <ModeItem
+            {/* <ModeItem
                 title={Strings.SCHEDULED}
                 description={Strings.MODE_SCHEDULED_DESCRIPTION}
                 icon={faCalendar}
                 color={MyTheme.green}
                 selected={mode === Modes.SCHED}
                 onPress={() => onSelect(Modes.SCHED)}
-            />
+            /> */}
             <ModeItem
                 title={Strings.MANUAL}
                 description={Strings.MODE_MANUAL_DESCRIPTION}
