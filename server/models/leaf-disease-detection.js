@@ -1,5 +1,4 @@
 var spawn = require("child_process").spawn;
-var process = spawn("python", ["../AI-Model/diseaseDetection/main.py"]);
 
 function getResult() {
     return new Promise((resolve, reject) => {

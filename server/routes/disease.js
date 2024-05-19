@@ -7,7 +7,7 @@ const diseaseDetection = require("../controllers/diseaseDetection");
 // create configuration to store file upload
 let diskStorage = multer.diskStorage({
   destination: (req, file, callback) => {
-    callback(null, "../AI-Model/diseaseDetection/picture");
+    callback(null, "./AI-Model/diseaseDetection/picture");
   },
   filename: (req, file, callback) => {
     // only allowed png & jpg
@@ -27,11 +27,11 @@ let diskStorage = multer.diskStorage({
 let uploadFile = multer({ storage: diskStorage }).single("file");
 
 // Handle upload file
-router.post("/", (req, res) => {
+router.post("/", (req, res, next) => {
   uploadFile(req, res, (error) => {
-    console.log(req)
     if (error) {
-      return res.send(`Error when trying to upload: ${error}`);
+      console.error(`Error when trying to upload: ${error}`);
+      return res.status(500).send(`Error when trying to upload: ${error.message}`);
     }
 
     console.log(`------Request body-----`);
@@ -41,8 +41,9 @@ router.post("/", (req, res) => {
     console.log(req.file);
 
     console.log(`------Test Done-----`);
-  })
-},diseaseDetection.getDisease);
+    next();
+  });
+}, diseaseDetection.getDisease);
 
 
 module.exports = router;
