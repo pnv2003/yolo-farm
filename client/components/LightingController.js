@@ -14,7 +14,7 @@ import { MyTheme } from "../constants/theme";
 import { Text } from "react-native-paper";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
 import SettingItem from "./SettingItem";
-import DeviceToggler from "./DeviceToggler";
+// import DeviceToggler from "./DeviceToggler";
 
 
 const LightingController = () => {
@@ -46,37 +46,19 @@ const LightingController = () => {
                     console.log("Got lighting: " + data.last_value);
                 });
 
-            http.get('adafruit', APIs.FAN)
+            http.get('server', APIs.LIGHT_INTENSITY_RANGE)
                 .then((data) => {
-                    setFanOn(parseInt(data.last_value));
-                    console.log("Got fan: " + data.last_value);
-                });
+                    setMinValue(data.minLightEnergy);
+                    setMaxValue(data.maxLightEnergy);
+
+                    console.log("Got min value: " + data.minLightEnergy);
+                    console.log("Got max value: " + data.maxLightEnergy);
+                })
         }, [])
     );
 
-    function onToggleFan() {
-        console.log("Toggled");
-
-        http.request(
-            'adafruit',
-            'POST',
-            APIs.FAN_DATA,
-            {
-                value: fanOn ? '0' : '1'
-            }
-        );
-        setFanOn(!fanOn);
-    }
-
     const devices = (
-        <DeviceToggler
-            deviceName={Strings.FAN}
-            enabled={fanOn}
-            onSwitch={onToggleFan}
-            disabled={true}
-            color={MyTheme.yellow}
-            icon={faFan}
-        />
+        undefined
     );
     const meters = (
         <View style={{
