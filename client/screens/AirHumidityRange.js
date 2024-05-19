@@ -5,10 +5,14 @@ import * as APIs from '../constants/api';
 import * as http from "../utils/http";
 import RangeSelect from "../components/RangeSelect";
 import { useFocusEffect } from "@react-navigation/native";
+import { ActivityIndicator } from "react-native-paper";
+import { MyTheme } from "../constants/theme";
+import Loading from "../components/Loading";
 
 const AirHumidityRange = () => {
-    const [minValue, setMinValue] = useState("3000");
-    const [maxValue, setMaxValue] = useState("13000");
+    const [minValue, setMinValue] = useState("45");
+    const [maxValue, setMaxValue] = useState("60");
+    const [loading, setLoading] = useState(true);
 
     useFocusEffect(
         useCallback(() => {
@@ -19,7 +23,9 @@ const AirHumidityRange = () => {
 
                     console.log("Got min: " + data.minHumi);
                     console.log("Got max: " + data.maxHumi);
-                })
+
+                    setLoading(false);
+                });
         }, [])
     );
 
@@ -39,6 +45,7 @@ const AirHumidityRange = () => {
     }
 
     return (
+        loading ? <Loading color={MyTheme.green} /> :
         <RangeSelect
             minValue={minValue}
             maxValue={maxValue}

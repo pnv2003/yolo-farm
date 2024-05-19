@@ -9,18 +9,21 @@ import { Button, Dialog, Portal, Text } from "react-native-paper";
 import { MyTheme } from "../constants/theme";
 import * as http from "../utils/http";
 import { useFocusEffect } from "@react-navigation/native";
+import Loading from "../components/Loading";
 
 const PumpModeScreen = () => {
 
     const [mode, setMode] = useState(Modes.AUTO);
     const [pendingMode, setPendingMode] = useState(Modes.AUTO);
     const [confirmVisible, setConfirmVisible] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     useFocusEffect(
         useCallback(() => {
             http.get('server', APIs.PUMP_MODE)
                 .then((data) => {
                     setMode(data.mode);
+                    setLoading(false);
                     console.log("Got mode: " + data.mode);
                 })
         }, [])
@@ -53,6 +56,7 @@ const PumpModeScreen = () => {
     }
 
     return (
+        loading ? <Loading color={MyTheme.blue} /> :
         <View style={{
             flex: 1,
             alignItems: 'center'

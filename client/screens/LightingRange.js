@@ -5,10 +5,13 @@ import * as Errors from '../constants/error';
 import * as APIs from '../constants/api';
 import * as http from "../utils/http";
 import RangeSelect from "../components/RangeSelect";
+import Loading from "../components/Loading";
+import { MyTheme } from "../constants/theme";
 
 const LightingRange = () => {
     const [minValue, setMinValue] = useState("30");
     const [maxValue, setMaxValue] = useState("130");
+    const [loading, setLoading] = useState(true);
 
     useFocusEffect(
         useCallback(() => {
@@ -16,7 +19,7 @@ const LightingRange = () => {
                 .then((data) => {
                     setMinValue(data.minLightEnergy.toString());
                     setMaxValue(data.maxLightEnergy.toString());
-
+                    setLoading(false);
 
                     console.log("Got min: " + data.minLightEnergy);
                     console.log("Got max: " + data.maxLightEnergy);
@@ -40,6 +43,7 @@ const LightingRange = () => {
     }
 
     return (
+        loading ? <Loading color={MyTheme.yellow} /> :
         <RangeSelect 
             minValue={minValue}
             maxValue={maxValue}

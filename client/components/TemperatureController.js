@@ -15,6 +15,7 @@ import { Text } from "react-native-paper";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
 import SettingItem from "./SettingItem";
 import ControllerLayout from "../layouts/ControllerLayout";
+import Loading from "./Loading";
 
 const TemperatureController = () => {
     const [temperature, setTemperature] = useState(27);
@@ -22,6 +23,7 @@ const TemperatureController = () => {
     const [minValue, setMinValue] = useState(20);
     const [maxValue, setMaxValue] = useState(30);
     const [mode, setMode] = useState(Modes.MANUAL);
+    const [loading, setLoading] = useState(true);
     const warning = temperature < minValue || temperature > maxValue;
 
     useFocusEffect(
@@ -39,27 +41,24 @@ const TemperatureController = () => {
                 }
             };
 
-            http.get('adafruit', APIs.TEMPERATURE)
-                .then((data) => {
-                    setTemperature(parseInt(data.last_value));
-                    console.log("Got temp: " + data.last_value);
-                });
-
-            http.get('adafruit', APIs.FAN)
-                .then((data) => {
-                    setFanOn(parseInt(data.last_value));
-                    console.log("Got fan: " + data.last_value);
-                });
-
-            http.get('server', APIs.TEMP_CONTROL_MODE)
-                .then((data) => {
-                    setMode(data.mode);
-                });
-            http.get('server', APIs.TEMP_RANGE)
-                .then((data) => {
-                    setMinValue(data.minTemp);
-                    setMaxValue(data.maxTemp);
-                })
+            Promise.all([
+                http.get('adafruit', APIs.TEMPERATURE),
+                http.get('adafruit', APIs.FAN),
+                http.get('server', APIs.TEMP_CONTROL_MODE),
+                http.get('server', APIs.TEMP_RANGE)
+            ]).then(([
+                tempData,
+                fanData,
+                tempModeData,
+                rangeData
+            ]) => {
+                setTemperature(parseInt(tempData.last_value));
+                setFanOn(parseInt(fanData.last_value));
+                setMode(tempModeData.mode);
+                setMinValue(rangeData.minTemp);
+                setMaxValue(rangeData.maxTemp);
+                setLoading(false);
+            });
         }, [])
     );
 
@@ -94,10 +93,12 @@ const TemperatureController = () => {
             alignItems: 'center',
             gap: 20
         }}>
-            { warning ? <FontAwesomeIcon icon={faWarning} color={MyTheme.red} size={32} /> : null}
-            <Text style={{ fontSize: 24, color: warning ? MyTheme.red : MyTheme.black}}>
-                {Strings.TEMPERATURE}
-            </Text>
+            <View style={{flex: 1, flexDirection: 'row', gap: 10 }}>
+                { warning ? <FontAwesomeIcon icon={faWarning} color={MyTheme.red} size={32} /> : null}
+                <Text style={{ fontSize: 24, color: warning ? MyTheme.red : MyTheme.black}}>
+                    {Strings.TEMPERATURE}
+                </Text>
+            </View>
             <AnimatedCircularProgress
                 size={200}
                 width={20}
@@ -124,6 +125,7 @@ const TemperatureController = () => {
             flex: 1,
             flexDirection: 'row',
             flexWrap: 'wrap',
+            justifyContent: 'center',
             gap: 10
         }}>
             <SettingItem
@@ -146,6 +148,7 @@ const TemperatureController = () => {
     );
 
     return (
+        loading ? <Loading color={MyTheme.orange} /> : 
         <ControllerLayout
             devices={devices}
             meters={meters}

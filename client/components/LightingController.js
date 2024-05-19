@@ -14,46 +14,37 @@ import { MyTheme } from "../constants/theme";
 import { Text } from "react-native-paper";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
 import SettingItem from "./SettingItem";
+import Loading from "./Loading";
 // import DeviceToggler from "./DeviceToggler";
 
 
 const LightingController = () => {
     const [lightIntensity, setLightIntensity] = useState(0);
-    const [fanOn, setFanOn] = useState(false);
     const [minValue, setMinValue] = useState(0);
     const [maxValue, setMaxValue] = useState(2000);
-    const [mode, setMode] = useState(Modes.MANUAL);
+    const [loading, setLoading] = useState(true);
     const warning = lightIntensity < minValue || lightIntensity > maxValue;
 
     useFocusEffect(
         useCallback(() => {
             const client = mqtt.init();
-            mqtt.connect(client, [APIs.LIGHT, APIs.FAN]);
+            mqtt.connect(client, [APIs.LIGHT]);
             client.onMessageArrived = (message) => {
                 topic = message.destinationName;
                 data = message.payloadString;
 
-                if (topic === APIs.LIGHT) {
-                    setLightIntensity(parseInt(data));
-                } else if (topic === APIs.FAN) {
-                    setFanOn(data == "1");
-                }
+                setLightIntensity(parseInt(data));
             };
 
-            http.get('adafruit', APIs.LIGHT)
-                .then((data) => {
-                    setLightIntensity(parseInt(data.last_value));
-                    console.log("Got lighting: " + data.last_value);
-                });
-
-            http.get('server', APIs.LIGHT_INTENSITY_RANGE)
-                .then((data) => {
-                    setMinValue(data.minLightEnergy);
-                    setMaxValue(data.maxLightEnergy);
-
-                    console.log("Got min value: " + data.minLightEnergy);
-                    console.log("Got max value: " + data.maxLightEnergy);
-                })
+            Promise.all([
+                http.get('adafruit', APIs.LIGHT),
+                http.get('server', APIs.LIGHT_INTENSITY_RANGE)
+            ]).then(([data, range]) => {
+                setLightIntensity(parseInt(data.last_value));
+                setMinValue(range.minLightEnergy);
+                setMaxValue(range.maxLightEnergy);
+                setLoading(false);
+            });
         }, [])
     );
 
@@ -67,10 +58,12 @@ const LightingController = () => {
             alignItems: 'center',
             gap: 20
         }}>
-            { warning ? <FontAwesomeIcon icon={faWarning} color={MyTheme.red} size={32} /> : null}
-            <Text style={{ fontSize: 24, color: warning ? MyTheme.red : MyTheme.black}}>
-                {Strings.LIGHT_INTENSITY}
-            </Text>
+            <View style={{flex: 1, flexDirection: 'row', gap: 10 }}>
+                { warning ? <FontAwesomeIcon icon={faWarning} color={MyTheme.red} size={32} /> : null}
+                <Text style={{ fontSize: 24, color: warning ? MyTheme.red : MyTheme.black}}>
+                    {Strings.LIGHT_INTENSITY}
+                </Text>
+            </View>
             <AnimatedCircularProgress
                 size={200}
                 width={20}
@@ -96,18 +89,10 @@ const LightingController = () => {
         <View style={{
             flex: 1,
             flexDirection: 'row',
+            justifyContent: 'center',
             flexWrap: 'wrap',
             gap: 10
         }}>
-            <SettingItem
-                title={Strings.MODE}
-                content={Modes.modeTitles[mode]}
-                icon={faGear}
-                target={Headers.LIGHT_CONTROL_MODE}
-                disabled={true}
-                primColor={MyTheme.yellow}
-                bgColor={MyTheme.black}
-            />
             <SettingItem 
                 title={Strings.ALLOWED_RANGE}
                 content={`${minValue} - ${maxValue} ${Strings.LIGHT_INTENSITY_UNIT}`}
@@ -120,6 +105,7 @@ const LightingController = () => {
     );
 
     return (
+        loading ? <Loading color={MyTheme.yellow} /> :
         <ControllerLayout
             devices={devices}
             meters={meters}

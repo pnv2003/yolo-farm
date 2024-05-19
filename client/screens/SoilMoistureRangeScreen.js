@@ -7,11 +7,13 @@ import { Button, HelperText, Text, TextInput } from "react-native-paper";
 import { MyTheme } from "../constants/theme";
 import * as http from "../utils/http";
 import { useFocusEffect } from "@react-navigation/native";
+import Loading from "../components/Loading";
 
 const SoilMoistureRangeScreen = () => {
 
     const [minValue, setMinValue] = useState("");
     const [maxValue, setMaxValue] = useState("");
+    const [loading, setLoading] = useState(true);
 
     useFocusEffect(
         useCallback(() => {
@@ -19,6 +21,7 @@ const SoilMoistureRangeScreen = () => {
                 .then((data) => {
                     setMinValue(data.minMoisture.toString());
                     setMaxValue(data.maxMoisture.toString());
+                    setLoading(false);
 
                     console.log("Got min: " + data.minMoisture);
                     console.log("Got max: " + data.maxMoisture);
@@ -42,6 +45,7 @@ const SoilMoistureRangeScreen = () => {
     }
 
     return (
+        loading ? <Loading color={MyTheme.blue} /> :
         <View style={styles.container}>
             <Text style={styles.desc}>{Strings.SOIL_MOISTURE_RANGE_DESCRIPTION}</Text>
             <View style={styles.inputField}>

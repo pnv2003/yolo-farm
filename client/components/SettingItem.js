@@ -23,6 +23,7 @@ const SettingItem = ({
             borderStyle: 'solid',
             // borderWidth: 1,
             borderRadius: 20,
+            maxWidth: 120
         }
     });
 

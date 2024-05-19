@@ -9,17 +9,20 @@ import { MyTheme } from "../constants/theme";
 import ModeItem from "../components/ModeItem";
 import { View } from "react-native";
 import { Button, Dialog, Portal, Text } from "react-native-paper";
+import Loading from "../components/Loading";
 
 const TemperatureMode = () => {
     const [mode, setMode] = useState(Modes.MANUAL);
     const [pendingMode, setPendingMode] = useState(Modes.MANUAL);
     const [confirmVisible, setConfirmVisible] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     useFocusEffect(
         useCallback(() => {
             http.get('server', APIs.TEMP_CONTROL_MODE)
                 .then((data) => {
                     setMode(data.mode);
+                    setLoading(false);
                     console.log("Got mode: " + data.mode);
                 })
         })
@@ -52,6 +55,7 @@ const TemperatureMode = () => {
     }
 
     return (
+        loading ? <Loading color={MyTheme.orange} /> :
         <View style={{
             flex: 1,
             alignItems: 'center'

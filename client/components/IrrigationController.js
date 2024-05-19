@@ -15,6 +15,8 @@ import { MyTheme } from "../constants/theme";
 import * as mqtt from "../utils/mqtt";
 import * as http from "../utils/http";
 import { useFocusEffect } from "@react-navigation/native";
+import Loading from "./Loading";
+import ControllerLayout from "../layouts/ControllerLayout";
 
 const IrrigationController = () => {
 
@@ -23,9 +25,8 @@ const IrrigationController = () => {
     const [minValue, setMinValue] = useState(null);
     const [maxValue, setMaxValue] = useState(null);
     const [mode, setMode] = useState(Modes.MANUAL);
+    const [loading, setLoading] = useState(true);
     const warning = soilMoisture < minValue || soilMoisture > maxValue;
-
-    
 
     useFocusEffect(
         useCallback(() => {
@@ -45,46 +46,69 @@ const IrrigationController = () => {
                 }
             }
 
-            http.get('adafruit', APIs.PUMP_FEED)
-            .then((data) => {
-                setPumping(data.last_value);
+            Promise.all([
+                http.get('adafruit', APIs.PUMP_FEED),
+                http.get('adafruit', APIs.SOIL_MOISTURE_FEED),
+                http.get('server', APIs.PUMP_MODE),
+                http.get('server', APIs.SOIL_MOISTURE_RANGE)
+            ]).then(([
+                pumpData, 
+                soilMoisureData, 
+                pumpModeData,
+                rangeData
+            ]) => {
+                setPumping(pumpData.last_value);
+                setSoilMoisture(parseInt(soilMoisureData.last_value));
+                setMode(pumpModeData.mode);
+                setMinValue(rangeData.minMoisture);
+                setMaxValue(rangeData.maxMoisture);
+                setLoading(false);
+            })
 
-                console.log("Got pump: " + data.last_value);
-            });
+            // http.get('adafruit', APIs.PUMP_FEED)
+            // .then((data) => {
+            //     setPumping(data.last_value);
 
-            http.get('adafruit', APIs.SOIL_MOISTURE_FEED)
-                .then((data) => {
-                    setSoilMoisture(parseInt(data.last_value));
+            //     console.log("Got pump: " + data.last_value);
+            // });
 
-                    console.log("Got moisture: " + data.last_value);
-                });
+            // http.get('adafruit', APIs.SOIL_MOISTURE_FEED)
+            //     .then((data) => {
+            //         setSoilMoisture(parseInt(data.last_value));
+
+            //         console.log("Got moisture: " + data.last_value);
+            //     });
+
+            // return () => {
+            //     mqtt.disconnect(client);
+            // }
         }, [])
     );
     
-    useFocusEffect(
-        useCallback(() => {
+    // useFocusEffect(
+    //     useCallback(() => {
 
-            http.get('server', APIs.PUMP_MODE)
-                .then((data) => {
-                    setMode(data.mode)
+    //         http.get('server', APIs.PUMP_MODE)
+    //             .then((data) => {
+    //                 setMode(data.mode)
 
-                    console.log("Got mode: " + mode);
-                });
+    //                 console.log("Got mode: " + mode);
+    //             });
 
-            http.get('server', APIs.SOIL_MOISTURE_RANGE)
-                .then((data) => {
-                    setMinValue(data.minMoisture);
-                    setMaxValue(data.maxMoisture);
+    //         http.get('server', APIs.SOIL_MOISTURE_RANGE)
+    //             .then((data) => {
+    //                 setMinValue(data.minMoisture);
+    //                 setMaxValue(data.maxMoisture);
 
-                    console.log("Got min: " + data.minMoisture);
-                    console.log("Got max: " + data.maxMoisture);
-                })
+    //                 console.log("Got min: " + data.minMoisture);
+    //                 console.log("Got max: " + data.maxMoisture);
+    //             })
 
-            return () => {
-                // mqtt.disconnect(client);
-            }
-        }, [])
-    );
+    //         return () => {
+    //             // mqtt.disconnect(client);
+    //         }
+    //     }, [])
+    // );
 
     function onTogglePump() {
         console.log("Toggled!");
@@ -101,87 +125,83 @@ const IrrigationController = () => {
         setPumping(!pumping);
     }
 
-    return (
-        <View style={styles.container}>
-            <View style={styles.devices}>
-                <Text style={styles.header}>{Strings.DEVICE}</Text>
-                <DeviceToggler 
-                    deviceName={Strings.WATER_PUMP}
-                    icon={faDroplet}
-                    enabled={pumping} 
-                    onSwitch={onTogglePump}
-                    disabled={mode !== Modes.MANUAL}
-                    color={MyTheme.blue}
-                />
+    const devices = (
+        <DeviceToggler 
+            deviceName={Strings.WATER_PUMP}
+            icon={faDroplet}
+            enabled={pumping} 
+            onSwitch={onTogglePump}
+            disabled={mode !== Modes.MANUAL}
+            color={MyTheme.blue}
+        />
+    );
+
+    const meters = (
+        <View style={{
+            flex: 1,
+            alignItems: 'center',
+            gap: 20
+        }}>
+            <View style={{flex: 1, flexDirection: 'row', gap: 10 }}>
+                { warning ? <FontAwesomeIcon icon={faWarning} color={MyTheme.red} size={32}/> : null}
+                <Text style={{ fontSize: 24, color: warning ? MyTheme.red : 'black'}}>{Strings.SOIL_MOISTURE}</Text>
             </View>
-            <View style={styles.metrics}>
-                <Text style={styles.header}>{Strings.METRIC}</Text>
-                <View style={styles.meter}>
-                    <View style={{
-                        flex: 1,
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        gap: 20
-                    }}>
-                        { warning ? <FontAwesomeIcon icon={faWarning} color={MyTheme.red} size={32}/> : null}
-                        <Text style={{ fontSize: 24, color: warning ? MyTheme.red : 'black'}}>{Strings.SOIL_MOISTURE}</Text>
-                    </View>                    
-                    <AnimatedCircularProgress
-                        size={200}
-                        width={20}
-                        fill={soilMoisture}
-                        rotation={0}
-                        tintColor={ warning ? MyTheme.red : MyTheme.blue }
-                        // onAnimationComplete={() => console.log('onAnimationComplete')}
-                        backgroundColor="#CCCCCC">
-                            {
-                                () => (
-                                    <>
-                                        <Text style={{ fontSize: 50 }}>
-                                            {soilMoisture}
-                                        </Text>
-                                        <Text style={{ fontSize: 25 }}>%</Text>
-                                    </>
-                                )
-                            } 
-                    </AnimatedCircularProgress>
-                </View>
-            </View>
-            <View style={styles.settings}>
-                <Text style={styles.header}>{Strings.SETTINGS}</Text>
-                <View style={{ 
-                    flex: 1, 
-                    flexDirection: 'row', 
-                    flexWrap: 'wrap',
-                    gap: 10
-                }}>
-                    <SettingItem 
-                        title={Strings.MODE} 
-                        content={Modes.modeTitles[mode]}
-                        icon={faGear} 
-                        target={Headers.PUMP_MODE} 
-                        primColor={MyTheme.darkblue}
-                        bgColor={MyTheme.lightblue}
-                    />
-                    {/* <SettingItem 
-                        title={Strings.SCHEDULE} 
-                        content={"Not Ready"}
-                        icon={faCalendar} 
-                        target={Headers.PUMP_SCHEDULE}
-                        primColor={MyTheme.darkblue}
-                        bgColor={MyTheme.lightblue}
-                    /> */}
-                    <SettingItem 
-                        title={Strings.ALLOWED_RANGE} 
-                        content={`${minValue} - ${maxValue}%`}
-                        icon={faWarning}
-                        target={Headers.SOIL_MOISTURE_RANGE}
-                        primColor={MyTheme.darkblue}
-                        bgColor={MyTheme.lightblue}
-                    />
-                </View>
-            </View>
+            <AnimatedCircularProgress
+                size={200}
+                width={20}
+                fill={soilMoisture}
+                rotation={0}
+                tintColor={ warning ? MyTheme.red : MyTheme.blue }
+                // onAnimationComplete={() => console.log('onAnimationComplete')}
+                backgroundColor="#CCCCCC">
+                    {
+                        () => (
+                            <>
+                                <Text style={{ fontSize: 50 }}>
+                                    {soilMoisture}
+                                </Text>
+                                <Text style={{ fontSize: 25 }}>%</Text>
+                            </>
+                        )
+                    } 
+            </AnimatedCircularProgress>
+        </View>                    
+    );
+
+    const settings = (
+        <View style={{ 
+            flex: 1, 
+            flexDirection: 'row', 
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            gap: 10
+        }}>
+            <SettingItem 
+                title={Strings.MODE} 
+                content={Modes.modeTitles[mode]}
+                icon={faGear} 
+                target={Headers.PUMP_MODE} 
+                primColor={MyTheme.darkblue}
+                bgColor={MyTheme.lightblue}
+            />
+            <SettingItem 
+                title={Strings.ALLOWED_RANGE} 
+                content={`${minValue} - ${maxValue}%`}
+                icon={faWarning}
+                target={Headers.SOIL_MOISTURE_RANGE}
+                primColor={MyTheme.darkblue}
+                bgColor={MyTheme.lightblue}
+            />
         </View>
+    );
+
+    return (
+        loading ? <Loading color={MyTheme.blue} /> :
+        <ControllerLayout 
+            devices={devices}
+            meters={meters}
+            settings={settings}
+        />
     );
 };
 

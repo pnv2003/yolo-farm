@@ -4,10 +4,13 @@ import * as http from "../utils/http";
 import * as Strings from "../constants/string";
 import RangeSelect from "../components/RangeSelect";
 import { useFocusEffect } from "@react-navigation/native";
+import Loading from "../components/Loading";
+import { MyTheme } from "../constants/theme";
 
 const TemperatureRange = () => {
     const [minValue, setMinValue] = useState("20");
     const [maxValue, setMaxValue] = useState("30");
+    const [loading, setLoading] = useState(true);
 
     useFocusEffect(
         useCallback(() => {
@@ -15,6 +18,7 @@ const TemperatureRange = () => {
                 .then((data) => {
                     setMinValue(data.minTemp.toString());
                     setMaxValue(data.maxTemp.toString());
+                    setLoading(false);
                     console.log("Got min: " + data.minTemp);
                     console.log("Got max: " + data.maxTemp);
                 })
@@ -37,6 +41,7 @@ const TemperatureRange = () => {
     }
 
     return (
+        loading ? <Loading color={MyTheme.orange} /> :
         <RangeSelect
             minValue={minValue}
             maxValue={maxValue}
