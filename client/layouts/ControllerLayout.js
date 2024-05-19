@@ -10,7 +10,7 @@ const ControllerLayout = ({ devices, meters, settings }) => {
                 <Text style={styles.header}>
                     {Strings.DEVICE}
                 </Text>
-                {devices}
+                {devices ? devices : <Text>Không có thiết bị</Text>}
             </View>
             <View style={styles.metrics}>
                 <Text style={styles.header}>

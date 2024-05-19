@@ -20,14 +20,23 @@ const PlantCare = () => {
                 formData.append('file', {
                     uri: photo,
                     name: fileName,
-                    type: `image/${fileType}`
+                    fieldname: 'file',
+                    type: `image/jpeg`
                 });
-                console.log("data: " + formData);
+                console.log("data: " + JSON.stringify(formData));
                 http.upload('server', 'POST', '/disease', formData)
                     .then(data => {
                         setResult(data.disease);
                         setAnalyzing(false);
                     })
+                    .catch(error => {
+                        console.error("Upload error: " + error);
+                    })
+
+                // console.log("Sent");
+                // http.upload('test', 'POST', '', formData);
+                // console.log("OK");
+
                 
             } catch(e) {
                 console.log("Failed to upload photo: " + e);
@@ -62,7 +71,7 @@ const PlantCare = () => {
                 marginTop: 20,
                 marginBottom: 10,
                 fontSize: 20,
-                color: result ? ( result == "None" ? MyTheme.green : MyTheme.red) : MyTheme.darkblue
+                color: result ? ( result == "Healthy" ? MyTheme.green : MyTheme.red) : MyTheme.darkblue
             }}>
                 {
                     analyzing

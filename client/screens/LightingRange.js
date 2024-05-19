@@ -7,8 +7,8 @@ import * as http from "../utils/http";
 import RangeSelect from "../components/RangeSelect";
 
 const LightingRange = () => {
-    const [minValue, setMinValue] = useState("3000");
-    const [maxValue, setMaxValue] = useState("13000");
+    const [minValue, setMinValue] = useState("30");
+    const [maxValue, setMaxValue] = useState("130");
 
     useFocusEffect(
         useCallback(() => {
