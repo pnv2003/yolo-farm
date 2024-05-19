@@ -121,7 +121,7 @@ export default function App() {
     <PaperProvider>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName= "Audio"
+          initialRouteName= {Headers.HOME}
           screenOptions={{
             header: (props) => <NavigationBar {...props} />
           }}
