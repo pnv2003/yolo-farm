@@ -84,7 +84,10 @@ const RangeSelect = ({
                 }}
                 icon={"content-save"} 
                 mode="contained"
-                onPress={onSave}
+                onPress={() => {
+                    alert("Lưu thành công!");
+                    onSave();
+                }}
                 buttonColor={MyTheme.blue}
             >
                 {Strings.SAVE}
