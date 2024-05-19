@@ -190,10 +190,10 @@ export default function App() {
             name={Headers.PLANT_CARE}
             component={PlantCare}
           />
-          <Stack.Screen
+          {/* <Stack.Screen
             name="Audio"
             component={AudioRecorder}
-          />
+          /> */}
           <Stack.Screen
             name="Graph"
             component={Graph}

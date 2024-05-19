@@ -39,8 +39,7 @@
     "react-native-svg": "15.2.0",
     "react-native-uuid": "^2.0.2",
     "react-native-voice": "^0.3.0",
-    "react-native-web": "~0.19.6",
-    "react-speech-kit": "^3.0.1"
+    "react-native-web": "~0.19.6"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
