@@ -66,13 +66,13 @@ function intime(start, end, now) {
 
 async function checkMoisture(value) {
   if (value < min_moisture) {
-    if ((pump = 0 && mode == "automatic")) {
+    if ((pump == 0 && mode == "automatic")) {
       await act_pump();
     } else if (mode != "automatic") {
       console.log("Warning: Soil Moisture is low");
     }
   } else if (value > max_moisture) {
-    if ((pump = 1 && mode == "automatic")) {
+    if ((pump == 1 && mode == "automatic")) {
       await inact_pump();
     } else if (mode != "automatic") {
       console.log("Warning: Soil Moisture is high");
