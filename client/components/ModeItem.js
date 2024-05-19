@@ -39,7 +39,8 @@ const styles = StyleSheet.create({
         borderStyle: 'solid',
         borderColor: 'black',
         borderWidth: 1,
-        backgroundColor: MyTheme.lightblue
+        backgroundColor: MyTheme.lightblue,
+        paddingHorizontal: 20
     },
     desc: {
         flex: 1

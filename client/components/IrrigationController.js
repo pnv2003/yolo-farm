@@ -163,14 +163,14 @@ const IrrigationController = () => {
                         primColor={MyTheme.darkblue}
                         bgColor={MyTheme.lightblue}
                     />
-                    <SettingItem 
+                    {/* <SettingItem 
                         title={Strings.SCHEDULE} 
                         content={"Not Ready"}
                         icon={faCalendar} 
                         target={Headers.PUMP_SCHEDULE}
                         primColor={MyTheme.darkblue}
                         bgColor={MyTheme.lightblue}
-                    />
+                    /> */}
                     <SettingItem 
                         title={Strings.ALLOWED_RANGE} 
                         content={`${minValue} - ${maxValue}%`}
