@@ -18,24 +18,16 @@ const PlantCare = () => {
                 const fileType = fileName.split('.').pop();
                 const formData = new FormData();
                 formData.append('file', {
-                    photo,
+                    uri: photo,
                     name: fileName,
                     type: `image/${fileType}`
                 });
-
-                // TODO: upload to server
-                // http.upload('server', 'POST', '/disease', formData)
-                //     .then(response => {
-                //         console.log(response);
-                //     });
-
-                // setTimeout(() => {}, 2000);
-
-                // http.get('server', '/disease')
-                //     .then(data => {
-                //         setResult(data.disease);
-                //         setAnalyzing(false);
-                //     });
+                console.log("data: " + formData);
+                http.upload('server', 'POST', '/disease', formData)
+                    .then(data => {
+                        setResult(data.disease);
+                        setAnalyzing(false);
+                    })
                 
             } catch(e) {
                 console.log("Failed to upload photo: " + e);
