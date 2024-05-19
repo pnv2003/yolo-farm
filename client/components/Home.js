@@ -22,42 +22,73 @@ const GreenhouseController = () => {
   const navigation = useNavigation();
 
   const [irrigationMode, setIrrigationMode] = useState("AUTOMATIC");
-  const [irrigationLevel, setIrrigationLevel] = useState(12);
-  const [lightingMode, setLightingMode] = useState("AUTOMATIC");
-  const [lightingPower, setLightingPower] = useState(4820);
-  const [lightingIntensity, setLightingIntensity] = useState(617);
-  const [temperature, setTemperature] = useState(362);
-  const [temperatureMode, setTemperatureMode] = useState("MANUAL");
-  const [airhumid, setAirhumid] = useState(362);
-  const [airhumidMode, setAirhumidMode] = useState("MANUAL");
+const [irrigationLevel, setIrrigationLevel] = useState(12);
+const [lightingMode, setLightingMode] = useState("AUTOMATIC");
+const [lightingPower, setLightingPower] = useState(4820);
+const [lightingIntensity, setLightingIntensity] = useState(617);
+const [temperature, setTemperature] = useState(362);
+const [temperatureMode, setTemperatureMode] = useState("MANUAL");
+const [airhumid, setAirhumid] = useState(362);
+const [airhumidMode, setAirhumidMode] = useState("MANUAL");
+
+useFocusEffect(
+  useCallback(() => {
+
+    const client = mqtt.init();
+    const topics = [APIs.SOIL_MOISTURE_FEED, APIs.LIGHT, APIs.AIR_HUMIDITY, APIs.TEMPERATURE];
+    mqtt.connect(client, topics);
   
-  useFocusEffect(
-    useCallback(() => {
+    client.onMessageArrived = (message) => {
+      console.log("Topic: " + message.destinationName);
+      console.log("Message: " + message.payloadString);
 
-      const client = mqtt.init();
-      mqtt.connect(client, [APIs.SOIL_MOISTURE_FEED]);
-    
-      client.onMessageArrived = (message) => {
-        console.log("Topic: " + message.destinationName);
-        console.log("Message: " + message.payloadString);
-    
-        topic = message.destinationName;
-        data = message.payloadString;
-        if (topic === APIs.SOIL_MOISTURE) {
-            setIrrigationLevel(parseInt(data));
-        }
+      const topic = message.destinationName;
+      const data = message.payloadString;
+      
+      switch(topic) {
+        case APIs.SOIL_MOISTURE:
+          setIrrigationLevel(parseInt(data));
+          break;
+        case APIs.LIGHT:
+          setLightingPower(parseInt(data)); // Assuming this updates the lighting power. Adjust as needed.
+          break;
+        case APIs.AIR_HUMIDITY:
+          setAirhumid(parseInt(data));
+          break;
+        case APIs.TEMPERATURE:
+          setTemperature(parseInt(data));
+          break;
+        default:
+          console.warn(`Unhandled topic: ${topic}`);
       }
+    }
 
-      http.get('adafruit', APIs.SOIL_MOISTURE_FEED)
-        .then((data) => {
-            setIrrigationLevel(data.last_value);
-        });
+    http.get('adafruit', APIs.SOIL_MOISTURE_FEED)
+      .then((data) => {
+        setIrrigationLevel(data.last_value);
+      });
 
-      return () => {
-        // mqtt.disconnect(client);
-      }
-    }, [])
-  );
+    http.get('adafruit', APIs.LIGHT)
+      .then((data) => {
+        setLightingPower(data.last_value); // Assuming this updates the lighting power. Adjust as needed.
+      });
+
+    http.get('adafruit', APIs.AIR_HUMIDITY)
+      .then((data) => {
+        setAirhumid(data.last_value);
+      });
+
+    http.get('adafruit', APIs.TEMPERATURE)
+      .then((data) => {
+        setTemperature(data.last_value);
+      });
+
+    return () => {
+      // mqtt.disconnect(client);
+    }
+  }, [])
+);
+
 
   const toggleIrrigationMode = () => {
     setIrrigationMode(irrigationMode === "AUTOMATIC" ? "MANUAL" : "AUTOMATIC");
@@ -78,6 +109,8 @@ const GreenhouseController = () => {
         return "W/m^2";
       case "Temperature":
         return "°C";
+      case "Air Humid":
+        return "%"
       default:
         return "";
     }
@@ -108,8 +141,8 @@ const GreenhouseController = () => {
       icon: "thermometer", 
     },
     {
-      title: "airhumid",
-      value: `${temperature}`,
+      title: "Air Humid",
+      value: `${airhumid}`,
       mode: temperatureMode,
       toggleMode: toggleTemperatureMode,
       color: "rgba(21, 156, 36, 0.8)",
@@ -187,7 +220,7 @@ const GreenhouseController = () => {
           </View>
         </TouchableOpacity>
       )}
-      {item.title === "airhumid" && (
+      {item.title === "Air Humid" && (
         <TouchableOpacity
           style={styles.ripple}
           onPress={() => navigation.navigate(Headers.AIR_HUMIDITY)}
