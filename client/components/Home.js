@@ -235,32 +235,46 @@ useFocusEffect(
   
 
   return (
-    <FlatList
-      data={data}
-      renderItem={renderItem}
-      keyExtractor={(item, index) => index.toString()}
-      contentContainerStyle={styles.flatListContainer}
-    />
+    <View style={styles.mainContainer}>
+      <View style={styles.buttonContainer}>
+        <Button title="Graph" onPress={() => navigation.navigate("Graph")} />
+        <Button title="Camera" onPress={() => navigation.navigate("Graph")} />
+      </View>
+      <FlatList
+        data={data}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => index.toString()}
+        contentContainerStyle={styles.flatListContainer}
+      />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    padding: 10,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 20,
+  },
   flatListContainer: {
     flexGrow: 1,
     justifyContent: "center",
     alignItems: "center",
-    paddingVertical: 10, 
   },
   container: {
     flexDirection: "row",
     marginBottom: 10,
     borderRadius: 35,
-    height: 250, 
+    height: 250,
   },
   leftContent: {
     flex: 1,
     justifyContent: "center",
-    paddingRight: 10, 
+    paddingRight: 10,
     alignItems: "center",
   },
   separator: {
@@ -303,7 +317,7 @@ const styles = StyleSheet.create({
   unitText: {
     fontSize: 12,
     color: "white", 
-    marginBottom: 10, 
+    marginBottom: 10,
   },
   statusText: {
     fontSize: 14,
