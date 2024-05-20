@@ -19,6 +19,8 @@
     "@react-native-voice/voice": "^3.2.4",
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/native-stack": "^6.9.26",
+    "@types/react": "~18.2.79",
+    "axios": "^1.7.0",
     "expo": "~51.0.7",
     "expo-av": "~14.0.5",
     "expo-camera": "~15.0.8",
@@ -39,7 +41,8 @@
     "react-native-svg": "15.2.0",
     "react-native-uuid": "^2.0.2",
     "react-native-voice": "^0.3.0",
-    "react-native-web": "~0.19.6"
+    "react-native-web": "~0.19.6",
+    "typescript": "~5.3.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

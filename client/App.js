@@ -26,6 +26,7 @@ import AudioRecorder from './components/AudioRecorder';
 import PumpSchedule from './screens/PumpSchedule';
 import AddScheduledTasks from './screens/AddScheduledTask';
 import PlantCare from './screens/PlantCare';
+import VoiceRecognition from './screens/VoiceRecognition';
 
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -190,10 +191,10 @@ export default function App() {
             name={Headers.PLANT_CARE}
             component={PlantCare}
           />
-          {/* <Stack.Screen
+          <Stack.Screen
             name="Audio"
-            component={AudioRecorder}
-          /> */}
+            component={VoiceRecognition}
+          />
           <Stack.Screen
             name="Graph"
             component={Graph}

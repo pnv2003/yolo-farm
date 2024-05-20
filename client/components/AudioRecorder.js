@@ -1,7 +1,7 @@
 // import React, { useState } from "react";
 // import { StyleSheet, View, TextInput, Dimensions } from "react-native";
 // import { Button, Text } from "react-native-paper";
-// import { useSpeechRecognition } from 'react-speech-kit';
+// // import { useSpeechRecognition } from 'react-speech-kit';
 
 // const { width } = Dimensions.get("window");
 // const buttonWidth = width * 0.7;
@@ -10,9 +10,9 @@
 //     const [isListening, setIsListening] = useState(false);
 //     const [transcript, setTranscript] = useState('');
 
-//     const { listen, listening, stop } = useSpeechRecognition({
-//         onResult: result => setTranscript(result),
-//     });
+//     // const { listen, listening, stop } = useSpeechRecognition({
+//     //     onResult: result => setTranscript(result),
+//     // });
 
 //     const handleStartRecording = () => {
 //         setIsListening(true);

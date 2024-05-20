@@ -1,5 +1,12 @@
-numpy
-torch
-pydantic
 fastapi
 uvicorn[standard]
+torch
+pydantic
+soundfile
+pydub
+transformers
+wheel
+ffmpeg-python==0.2.0
+pyaudio
+SpeechRecognition
+whisper

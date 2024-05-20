@@ -7,7 +7,8 @@ import {
   StyleSheet,
   FlatList,
   Dimensions,
-  TouchableOpacity
+  TouchableOpacity,
+  Button
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons"; 
 import { useNavigation } from "@react-navigation/core";
