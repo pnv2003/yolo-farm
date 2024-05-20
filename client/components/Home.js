@@ -238,7 +238,7 @@ useFocusEffect(
     <View style={styles.mainContainer}>
       <View style={styles.buttonContainer}>
         <Button title="Graph" onPress={() => navigation.navigate("Graph")} />
-        <Button title="Camera" onPress={() => navigation.navigate("Graph")} />
+        <Button title="PlantCare" onPress={() => navigation.navigate(Headers.PLANT_CARE)} />
       </View>
       <FlatList
         data={data}
