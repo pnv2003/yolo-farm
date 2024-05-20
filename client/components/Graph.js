@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, ActivityIndicator, Dimensions, ScrollView } from 'react-native';
+import { View, Text, ActivityIndicator, Dimensions, ScrollView, TextInput, Button,  StyleSheet} from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 import { Ionicons } from '@expo/vector-icons';
 import * as mqtt from '../utils/mqtt';
@@ -13,6 +13,9 @@ const Graph = () => {
   const [pumpData, setPumpData] = useState([]);
   const [fanData, setFanData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isFiltering, setIsFiltering] = useState(false);
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -94,6 +97,21 @@ const Graph = () => {
 
   const screenWidth = Dimensions.get('window').width;
 
+  const filteredData = (data) => {
+    if (!isFiltering) return data;
+    return data.filter(({ date }) => date >= startDate && date <= endDate);
+  };
+
+  const handleFilter = () => {
+    setIsFiltering(true);
+  };
+
+  const handleClearFilter = () => {
+    setIsFiltering(false);
+    setStartDate('');
+    setEndDate('');
+  };
+
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#f0f0f0', marginRight: 50  }}>
       {loading ? (
@@ -104,13 +122,31 @@ const Graph = () => {
             <Ionicons name="analytics-outline" size={24} color="black" style={{ marginRight: 10 }} />
             <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Biểu đồ thống kê</Text>
           </View>
-
+ 
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
+            <TextInput
+              style={{ borderWidth: 1, borderColor: 'gray', padding: 5, marginRight: 10 }}
+              placeholder="Ngày bắt đầu"
+              value={startDate}
+              onChangeText={setStartDate}
+            />
+            <TextInput
+              style={{ borderWidth: 1, borderColor: 'gray', padding: 5, marginRight: 10 }}
+              placeholder="Ngày kết thúc"
+              value={endDate}
+              onChangeText={setEndDate}
+            />
+            <Button title="Lọc" onPress={handleFilter}/>
+            <Button title="Hủy lọc" onPress={handleClearFilter} />
+            
+          </View>
+          <Text style={{ fontSize: 12, fontWeight: 'bold' }}>*Nhập ngày theo định dạng YYYY-MM-DD. Ví dụ: 2024-03-28</Text>
           {/* Soil Moisture Chart */}
           <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Độ ẩm đất (%)</Text>
           <LineChart
             data={{
-              labels: soilMoistureData.map(({ date }) => date),
-              datasets: [{ data: soilMoistureData.map(({ value }) => value) }]
+              labels: filteredData(soilMoistureData).map(({ date }) => date),
+              datasets: [{ data: filteredData(soilMoistureData).map(({ value }) => value) }]
             }}
             width={screenWidth * 0.9}
             height={250}
@@ -145,8 +181,8 @@ const Graph = () => {
           <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Độ ẩm không khí (%)</Text>
           <LineChart
             data={{
-              labels: airHumidData.map(({ date }) => date),
-              datasets: [{ data: airHumidData.map(({ value }) => value) }]
+              labels: filteredData(airHumidData).map(({ date }) => date),
+              datasets: [{ data: filteredData(airHumidData).map(({ value }) => value) }]
             }}
             width={screenWidth * 0.9}
             height={250}
@@ -181,8 +217,8 @@ const Graph = () => {
           <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Cường độ ánh sáng (cd)</Text>
           <LineChart
             data={{
-              labels: lightData.map(({ date }) => date),
-              datasets: [{ data: lightData.map(({ value }) => value) }]
+              labels: filteredData(lightData).map(({ date }) => date),
+              datasets: [{ data: filteredData(lightData).map(({ value }) => value) }]
             }}
             width={screenWidth * 0.9}
             height={250}
@@ -217,8 +253,8 @@ const Graph = () => {
           <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Nhiệt độ (℃)</Text>
           <LineChart
             data={{
-              labels: tempData.map(({ date }) => date),
-              datasets: [{ data: tempData.map(({ value }) => value) }]
+              labels: filteredData(tempData).map(({ date }) => date),
+              datasets: [{ data: filteredData(tempData).map(({ value }) => value) }]
             }}
             width={screenWidth * 0.9}
             height={250}
@@ -253,8 +289,8 @@ const Graph = () => {
           <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Máy bơm nước</Text>
           <LineChart
             data={{
-              labels: pumpData.map(({ date }) => date),
-              datasets: [{ data: pumpData.map(({ value }) => value) }]
+              labels: filteredData(pumpData).map(({ date }) => date),
+              datasets: [{ data: filteredData(pumpData).map(({ value }) => value) }]
             }}
             width={screenWidth * 0.9}
             height={250}
@@ -289,8 +325,8 @@ const Graph = () => {
           <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Quạt Mini</Text>
           <LineChart
             data={{
-              labels: fanData.map(({ date }) => date),
-              datasets: [{ data: fanData.map(({ value }) => value) }]
+              labels: filteredData(fanData).map(({ date }) => date),
+              datasets: [{ data: filteredData(fanData).map(({ value }) => value) }]
             }}
             width={screenWidth * 0.9}
             height={250}
@@ -325,5 +361,9 @@ const Graph = () => {
     </ScrollView>
   );
 };
-
+const styles = StyleSheet.create({
+  button: {
+    margin: 10, // Adjust the margin as needed
+  },
+});
 export default Graph;
